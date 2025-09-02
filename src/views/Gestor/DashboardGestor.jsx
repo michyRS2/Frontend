@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../axiosConfig";
+import api from "../../../axiosConfig";
 import { Link, useNavigate } from "react-router-dom";
 import {
   PieChart,

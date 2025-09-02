@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Form, Badge, Spinner } from "react-bootstrap";
 import { FaArrowLeft, FaClock, FaUsers, FaStar, FaFilter } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../../axiosConfig";
+import api from "../../../axiosConfig";
 import "../../styles/CursosTopico.css";
 
 const CursosTopico = () => {

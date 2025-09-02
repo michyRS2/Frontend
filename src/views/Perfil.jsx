@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import PerfilCard from '../components/PerfilCard.jsx';
 import '../styles/Perfil.css';
-import api from '../axiosConfig';
+import api from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {

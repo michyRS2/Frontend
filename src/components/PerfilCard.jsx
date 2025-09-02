@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Card, Image, Row, Col, Spinner } from 'react-bootstrap';
 import { FaUserEdit, FaSave, FaTimes } from 'react-icons/fa';
-import api from '../axiosConfig'; // Importar a instância configurada
+import api from '../../axiosConfig'; // Importar a instância configurada
 
 const PerfilCard = () => {
     const [editMode, setEditMode] = useState(false);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Table, Button, Badge, Modal, Form, Spinner, Alert, Row, Col, Card } from "react-bootstrap";
 import { FaCheck, FaTimes, FaEye, FaUserPlus, FaUserCheck, FaUserClock } from "react-icons/fa";
-import api from "../../axiosConfig";
+import api from "../../../axiosConfig";
 import "../../styles/GerirUtilizadores.css";
 
 const GerirUtilizadores = () => {

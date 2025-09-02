@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Badge, Button, Spinner } from 'react-bootstrap';
 import { FaBell, FaEye, FaTrash, FaSync, FaCheckDouble, FaTrashAlt } from 'react-icons/fa';
-import api from '../axiosConfig';
+import api from '../../axiosConfig';
 import '../styles/NotificationBell.css';
 import { useNavigate } from 'react-router-dom';
 

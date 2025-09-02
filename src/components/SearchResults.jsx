@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Form, Badge, Spinner, Alert } from "react-bootstrap";
 import { FaArrowLeft, FaClock, FaUsers, FaStar, FaFilter, FaSearch } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import api from "../axiosConfig";
+import api from "../../axiosConfig";
 import "../styles/CursosTopico.css";
 
 const SearchResults = () => {

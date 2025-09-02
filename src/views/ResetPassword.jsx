@@ -1,7 +1,7 @@
 // views/ResetPassword.jsx
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../axiosConfig";
+import api from "../../axiosConfig";
 import '../styles/ResetPassword.css';
 
 export default function ResetPassword() {

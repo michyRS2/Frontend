@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../axiosConfig';
+import api from '../../axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Register.css';
 

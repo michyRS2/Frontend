@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
-import api from "../../axiosConfig";
+import api from "../../../axiosConfig";
 
 const API = "https://backend-4tkw.onrender.com";
 
