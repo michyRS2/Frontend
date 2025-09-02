@@ -255,6 +255,8 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/teste-protegido" element={<ProtectedPage />} />
+
           <Route
             path="/formador/cursos/:id/novo-quiz"
             element={
