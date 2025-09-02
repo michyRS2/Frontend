@@ -40,7 +40,7 @@ export default function Login() {
         setRecoveryError('');
 
         try {
-            const res = await api.post('/login', {
+            const res = await api.post('/auth/login', {
                 Email: email,
                 Password: password,
             }, {
