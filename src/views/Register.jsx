@@ -50,10 +50,12 @@ export default function Register() {
         }
 
         try {
-            await api.post('/register', {
-                ...rest,
-                Password
-            });
+            await api.post('/auth/register', {
+    Nome: formData.Nome,
+    Email: formData.Email,
+    Password: formData.Password
+});
+
             setSuccess('Registo concluído! Redirecionando para o login...');
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
