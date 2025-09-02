@@ -14,24 +14,25 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const res = await api.get('/auth/check', {
-                    withCredentials: true,
-                });
+  const checkAuth = async () => {
+    try {
+      const res = await api.get('/auth/check', { withCredentials: true });
+      const { role } = res.data.user;
 
-                const { role } = res.data.user;
+      if (role === 'formando') navigate('/formando/dashboard');
+      else if (role === 'gestor') navigate('/gestor/dashboard');
+      else if (role === 'formador') navigate('/formador/dashboard');
+    } catch (err) {
+      if (err.response?.status !== 401) {
+        console.error('Erro ao verificar autenticação:', err);
+      }
+      // Se for 401, o utilizador apenas vê o login normalmente
+    }
+  };
 
-                if (role === 'formando') navigate('/formando/dashboard');
-                else if (role === 'gestor') navigate('/gestor/dashboard');
-                else if (role === 'formador') navigate('/formador/dashboard');
-            } catch (err) {
-                // Usuário não autenticado — permanece na tela de login
-            }
-        };
+  checkAuth();
+}, [navigate]);
 
-        checkAuth();
-    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
