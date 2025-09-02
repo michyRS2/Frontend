@@ -34,7 +34,6 @@ import QuizCurso from "./views/Formando/QuizCurso";
 import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
 import ProtectedPage from "./views/ProtectedPage";
-
 // Componente para proteger rotas
 function PrivateRoute({ children, allowedRoles }) {
   const token = localStorage.getItem("token");
