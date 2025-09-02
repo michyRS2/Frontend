@@ -3,7 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import formandoService from "../../services/formandoService";
 import CursoCard from "../../components/CursoCard";
 import ForumCard from "../../components/ForumCard";
-import "../../styles/DashboardFormando.css";
+import "../../styles/dashboardFormando";
 
 const API = "https://backend-4tkw.onrender.com";
 
