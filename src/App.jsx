@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api from "./axiosConfig";
+import api from "../axiosConfig";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import MainLayout from "./layouts/MainLayout";
