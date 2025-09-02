@@ -13,7 +13,6 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    // Verifica se já há token no localStorage
     useEffect(() => {
         const checkAuth = async () => {
             const token = localStorage.getItem('token');
@@ -48,15 +47,12 @@ export default function Login() {
 
             const { token, user, role } = res.data;
 
-            // Guardar token e info do utilizador
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('role', role);
 
-            // Configurar axios para enviar token em futuros pedidos
             setToken(token);
 
-            // Redirecionar
             if (role === 'formando') navigate('/formando/dashboard');
             else if (role === 'gestor') navigate('/gestor/dashboard');
             else if (role === 'formador') navigate('/formador/dashboard');
@@ -127,6 +123,10 @@ export default function Login() {
 
                     {recoveryMessage && <p style={{ color: 'green' }}>{recoveryMessage}</p>}
                     {recoveryError && <p style={{ color: 'red' }}>{recoveryError}</p>}
+
+                    <p className="register-link">
+                        Não tem conta? <Link to="/register">Registe-se aqui</Link>
+                    </p>
 
                     <div className="divider">
                         <span>Outras opções de login</span>

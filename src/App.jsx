@@ -5,7 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
-import api from "../axiosConfig";
+import api, { setToken } from "../axiosConfig";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import MainLayout from "./layouts/MainLayout";
@@ -34,20 +34,33 @@ import QuizCurso from "./views/Formando/QuizCurso";
 import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
 
+// Componente para proteger rotas
+function PrivateRoute({ children, allowedRoles }) {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (!token) return <Navigate to="/login" />;
+  if (allowedRoles && !allowedRoles.includes(role)) return <Navigate to="/login" />;
+
+  // Configurar axios com token
+  setToken(token);
+
+  return children;
+}
 
 function App() {
   const [loading, setLoading] = useState(true);
   const [auth, setAuth] = useState({ isAuthenticated: false, role: null });
 
+  // Verificar autenticação ao iniciar
   useEffect(() => {
     const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      if (token) setToken(token);
+
       try {
-        const res = await api.get("/auth/check", {
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          setAuth({ isAuthenticated: true, role: res.data.user.role });
-        }
+        const res = await api.get("/auth/check");
+        setAuth({ isAuthenticated: true, role: res.data.user.role });
       } catch {
         setAuth({ isAuthenticated: false, role: null });
       } finally {
@@ -63,22 +76,17 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
+          {/* Redirect inicial */}
           <Route
             path="/"
             element={
-              auth.isAuthenticated ? (
-                auth.role === "formando" ? (
-                  <Navigate to="/formando/dashboard" />
-                ) : auth.role === "gestor" ? (
-                  <Navigate to="/gestor/dashboard" />
-                ) : auth.role === "formador" ? (
-                  <Navigate to="/formador/dashboard" />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              ) : (
-                <Navigate to="/login" />
-              )
+              auth.isAuthenticated
+                ? {
+                    formando: <Navigate to="/formando/dashboard" />,
+                    gestor: <Navigate to="/gestor/dashboard" />,
+                    formador: <Navigate to="/formador/dashboard" />,
+                  }[auth.role] || <Navigate to="/login" />
+                : <Navigate to="/login" />
             }
           />
 
@@ -87,39 +95,176 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/search" element={<SearchResults />} />
+
           {/* Protected Routes */}
-          <Route path="/perfil" element={<Perfil />} />
-          
-          {/* Formando Routes */}
-          <Route path="/formando/dashboard" element={<DashboardFormando />} />
-          <Route path="/cursos/:cursoId" element={<CursoRecomendado />} />
-          <Route path="/cursosInscritos/:cursoId" element={<CursoInscrito />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/formando/topico/:topicoId/cursos" element={<CursosTopico />} /> {/* Nova rota */}
+          <Route
+            path="/perfil"
+            element={
+              <PrivateRoute>
+                <Perfil />
+              </PrivateRoute>
+            }
+          />
 
-          <Route path="/quiz/curso/:id" element={<QuizCurso />} />
-          <Route path="/quiz/:quizId" element={<QuizResponder />} />
+          {/* Formando */}
+          <Route
+            path="/formando/dashboard"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <DashboardFormando />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cursos/:cursoId"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <CursoRecomendado />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/cursosInscritos/:cursoId"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <CursoInscrito />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/forum"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <Forum />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/formando/topico/:topicoId/cursos"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <CursosTopico />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/quiz/curso/:id"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <QuizCurso />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/quiz/:quizId"
+            element={
+              <PrivateRoute allowedRoles={["formando"]}>
+                <QuizResponder />
+              </PrivateRoute>
+            }
+          />
 
+          {/* Gestor */}
+          <Route
+            path="/gestor/dashboard"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <DashboardGestor />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/criar-curso"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <NovoCurso />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/cursos/editar/:id"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <EditarCurso />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/gerircategorias"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <GerirCategorias />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/novacategoria"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <NovaCategoria />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/editarcategoria/:id"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <EditarCategoria />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/gerir-utilizadores"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <GerirUtilizadores />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/cursos/:id/novo-quiz"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <NovoQuiz />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/gestor/cursos/:cursoId/modulos"
+            element={
+              <PrivateRoute allowedRoles={["gestor"]}>
+                <ModulosAulas />
+              </PrivateRoute>
+            }
+          />
 
-          {/* Gestor Routes */}
-          <Route path="/gestor/dashboard" element={<DashboardGestor />} />
-          <Route path="/gestor/criar-curso" element={<NovoCurso />} />
-          <Route path="/gestor/cursos/editar/:id" element={<EditarCurso />} />
-          <Route path="/gestor/gerircategorias" element={<GerirCategorias />} />
-          <Route path="/gestor/novacategoria" element={<NovaCategoria />} />
-          <Route path="/gestor/editarcategoria/:id" element={<EditarCategoria />} />
-          <Route path="/gestor/gerir-utilizadores" element={<GerirUtilizadores />} />
-          <Route path="/gestor/cursos/:id/novo-quiz" element={<NovoQuiz />} />
-          <Route path="/gestor/cursos/:cursoId/modulos" element={<ModulosAulas />}/>
+          {/* Formador */}
+          <Route
+            path="/formador/dashboard"
+            element={
+              <PrivateRoute allowedRoles={["formador"]}>
+                <DashboardFormador />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/formador/editar-curso/:id"
+            element={
+              <PrivateRoute allowedRoles={["formador"]}>
+                <EditarCursoFormador />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/formador/cursos/:id/novo-quiz"
+            element={
+              <PrivateRoute allowedRoles={["formador"]}>
+                <NovoQuiz />
+              </PrivateRoute>
+            }
+          />
 
-          {/* Formador Routes */}
-          <Route path="/formador/dashboard" element={<DashboardFormador />} />
-          <Route path="/formador/editar-curso/:id" element={<EditarCursoFormador />} />
-          
-          <Route path="/formador/cursos/:id/novo-quiz" element={<NovoQuiz />} />
-
-
-          {/* 404 Route */}
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
