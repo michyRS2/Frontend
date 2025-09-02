@@ -141,7 +141,7 @@ const PerfilCard = () => {
                             <Image src={previewImage} roundedCircle className="Perfil-avatar" />
                         ) : userData.profileImage ? (
                             <Image
-                                src={`http://localhost:3000/uploads/profiles/${userData.profileImage}`}
+                                src={`https://backend-4tkw.onrender.com/uploads/profiles/${userData.profileImage}`}
                                 roundedCircle
                                 className="Perfil-avatar"
                                 onError={(e) => {
