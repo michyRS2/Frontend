@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { FaBars, FaBell, FaUser, FaSearch } from "react-icons/fa";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
-import api from "../axiosConfig.js";
+import api from "../../axiosConfig.js";
 import { FiLogOut } from "react-icons/fi";
 
 import "../styles/MainLayout.css";
