@@ -14,24 +14,28 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const checkAuth = async () => {
-            const token = localStorage.getItem('token');
-            if (token) setToken(token);
+    const token = localStorage.getItem('token');
+    if (!token) return; // Não há token, apenas mostra o login/registo
 
-            try {
-                const res = await api.get('/auth/check');
-                const { role } = res.data.user;
+    setToken(token);
 
-                if (role === 'formando') navigate('/formando/dashboard');
-                else if (role === 'gestor') navigate('/gestor/dashboard');
-                else if (role === 'formador') navigate('/formador/dashboard');
-            } catch (err) {
-                if (err.response?.status !== 401) console.error(err);
-            }
-        };
+    const checkAuth = async () => {
+        try {
+            const res = await api.get('/auth/check');
+            const { role } = res.data.user;
 
-        checkAuth();
-    }, [navigate]);
+            if (role === 'formando') navigate('/formando/dashboard');
+            else if (role === 'gestor') navigate('/gestor/dashboard');
+            else if (role === 'formador') navigate('/formador/dashboard');
+        } catch (err) {
+            // Apenas ignora erros 401, o utilizador ainda pode ver o login
+            if (err.response?.status !== 401) console.error(err);
+        }
+    };
+
+    checkAuth();
+}, [navigate]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
