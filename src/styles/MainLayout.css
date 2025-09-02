@@ -1,0 +1,442 @@
+.dashboard-content {
+    background: linear-gradient(135deg, #00adef 0%, #0076e5 100%);
+    position: relative;
+    min-height: 100vh;     /* altura mínima = altura da viewport */
+    overflow-x: hidden;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.background-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+
+#container-inside {
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.dashboard-inner {
+    padding: 40px;
+    width: 100%;
+    text-align: left;
+    z-index: 2;
+}
+
+/* Círculos decorativos animados */
+#circle-small,
+#circle-medium,
+#circle-large,
+#circle-xlarge,
+#circle-xxlarge {
+    animation: circle-small-scale 3s ease-in-out infinite alternate;
+    animation-timing-function: cubic-bezier(.6, 0, .4, 1);
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0.1;
+}
+
+
+
+#circle-small {
+    top: 200px;
+    left: -150px;
+    width: 300px;
+    height: 300px;
+    opacity: 0.4;
+    animation-delay: 0s;
+}
+
+#circle-medium {
+    top: 50px;
+    left: -300px;
+    width: 600px;
+    height: 600px;
+    opacity: 0.3;
+    animation-delay: 0.3s;
+}
+
+#circle-large {
+    top: -100px;
+    left: -450px;
+    width: 900px;
+    height: 900px;
+    opacity: 0.2;
+    animation-delay: 0.6s;
+}
+
+#circle-xlarge {
+    top: -250px;
+    left: -600px;
+    width: 1200px;
+    height: 1200px;
+    opacity: 0.1;
+    animation-delay: 0.9s;
+}
+
+#circle-xxlarge {
+    top: -400px;
+    left: -750px;
+    width: 1500px;
+    height: 1500px;
+    opacity: 0.05;
+    animation-delay: 1.2s;
+}
+
+
+
+
+@keyframes circle-small-scale {
+    0% { transform: scale(1.0); }
+    100% { transform: scale(1.1); }
+}
+
+
+
+/* Offcanvas Sidebar */
+.offcanvas {
+    width: 280px;
+    max-width: 100%;
+    height: 100vh !important; /* full viewport height */
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0 12px 12px 0;
+    color: #333;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1045; /* make sure it's above content */
+}
+
+/* Scrollbar for Offcanvas */
+.offcanvas::-webkit-scrollbar {
+    width: 8px;
+}
+
+.offcanvas::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.offcanvas::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.offcanvas::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Offcanvas Header */
+.offcanvas-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1rem 1.5rem;
+    color: #222;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+/* Offcanvas Body */
+.offcanvas-body {
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px); /* subtract header height approx */
+    overflow-y: auto;
+}
+
+/* Sidebar links (assumed inside SidebarContent components) */
+.sidebar-link, /* example selector - adapt as needed */
+.nav-link {
+    padding: 12px 18px;
+    font-weight: 500;
+    color: #222;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    display: block;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover,
+.sidebar-link:hover {
+    background-color: rgba(13, 110, 253, 0.15);
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+/* Logout section */
+.logout-section {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+}
+
+.logout-link {
+    background: none;
+    border: none;
+    color: #444;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.logout-link:hover {
+    color: #e63946;
+    transform: translateX(4px);
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(
+            135deg,
+            rgb(39, 141, 243),
+            rgb(91, 179, 232)
+    ) !important;
+    border-bottom: 1px solid rgba(0, 118, 229, 0.25); /* subtle border */
+    padding: 0.6rem 1.2rem;
+    box-shadow: 0 4px 16px rgba(0, 118, 229, 0.08);
+}
+
+
+/* Brand */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #ffffff !important;
+    letter-spacing: 0.5px;
+}
+
+/* Nav Icons (Bell, User) */
+.navbar .btn-link {
+    color: #ffffff !important;
+    opacity: 0.9;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.navbar .btn-link:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Navbar spacing */
+.navbar .nav {
+    gap: 1rem !important;
+}
+
+.search-form {
+    max-width: 600px;
+    flex-grow: 1;
+}
+
+.navbar .search-form {
+    flex: 0 1 auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-container {
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    transition: all 0.3s ease;
+}
+
+.search-input {
+    color: white !important;
+    padding: 0.75rem 1.5rem;
+    height: 45px;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1) !important;
+}
+
+.search-button {
+    width: 50px;
+    height: 45px;
+    padding: 0;
+    border-radius: 0 !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+}
+
+.search-icon {
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.search-button:hover .search-icon {
+    transform: scale(1.15);
+}
+
+/* Ajuste responsivo */
+@media (max-width: 992px) {
+    .search-form {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-form {
+        max-width: 300px;
+        margin-right: 1rem !important;
+    }
+
+    .navbar-brand {
+        margin-right: 0.5rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .search-form {
+        max-width: 200px;
+    }
+
+    .search-input {
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-form {
+        max-width: 150px;
+    }
+
+    .navbar-brand {
+        display: none;
+    }
+}
+
+
+/* Estilos para resultados da pesquisa */
+.search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 9999 !important;
+    margin-top: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.search-result-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-result-item:hover {
+    background: rgba(0, 118, 229, 0.08);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.course-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.course-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+}
+
+.course-category {
+    background: rgba(0, 118, 229, 0.1);
+    color: #0076e5;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.course-duration {
+    display: flex;
+    align-items: center;
+}
+
+.no-results {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+/* Melhorias no glassmorphism */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    transition: all 0.3s ease;
+}
+
+.search-input.glassmorphism:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .search-results-dropdown {
+        max-height: 300px;
+    }
+
+    .search-result-item {
+        padding: 12px 15px;
+    }
+}
+

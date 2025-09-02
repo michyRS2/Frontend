@@ -1,0 +1,289 @@
+/* Forum.css - Atualizado com Tema Azul */
+.forum-page {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    min-height: 100vh;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.forum-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.forum-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.forum-header p {
+    font-size: 1.1rem;
+    color: #7c8ca1;
+}
+
+.forum-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.filter-tabs {
+    display: flex;
+}
+
+.create-post-btn {
+    border-radius: 20px;
+    padding: 0.5rem 1.5rem;
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.create-post-btn:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.create-post-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.post-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #d6dbdf;
+}
+
+.vote-section {
+    min-width: 40px;
+}
+
+.vote-btn {
+    transition: all 0.2s ease;
+}
+
+.vote-btn:hover {
+    transform: scale(1.2);
+}
+
+.vote-btn.voted {
+    transform: scale(1.3);
+}
+
+.vote-count {
+    font-size: 0.9rem;
+    color: #2c3e50;
+    min-width: 2rem;
+    text-align: center;
+}
+
+.post-header {
+    margin-bottom: 0.5rem;
+}
+
+.username {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.post-time {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+.post-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #2c3e50;
+}
+
+.post-content-text {
+    color: #34495e;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.post-actions .btn {
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.85rem;
+    color: #3498db;
+    border-color: #3498db;
+}
+
+.post-actions .btn:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.comments-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.comments-section h6 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.comment-form {
+    background: #f6f7f8;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.comment-item {
+    padding: 0.75rem;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e5e5e5;
+}
+
+.comment-reply {
+    margin-left: 2rem;
+    background-color: #eaf2f8;
+}
+
+.comment-header {
+    margin-bottom: 0.25rem;
+}
+
+.comment-content-text {
+    color: #34495e;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+}
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-actions .btn {
+    padding: 0.1rem 0.5rem;
+    font-size: 0.75rem;
+    color: #3498db;
+}
+
+.comment-actions .btn:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.comment-replies {
+    margin-top: 0.5rem;
+}
+
+.replies-list {
+    border-left: 2px solid #3498db;
+    padding-left: 1rem;
+    margin-left: 0.5rem;
+}
+
+/* Cores dos votos - Tema Azul */
+.text-primary {
+    color: #3498db !important; /* Azul para upvotes */
+}
+
+.text-danger {
+    color: #e74c3c !important; /* Vermelho suave para downvotes */
+}
+
+.btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+}
+
+.comment-replies {
+    margin-left: 2rem;
+    border-left: 2px solid #3498db;
+    padding-left: 1rem;
+}
+
+.comment-item {
+    padding: 0.75rem;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .forum-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-tabs {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .post-actions {
+        flex-wrap: wrap;
+    }
+
+    .comment-reply {
+        margin-left: 1rem;
+    }
+
+    .comment-replies {
+        margin-left: 1rem;
+    }
+}
+
+/* Filtros com tema azul */
+.filter-tabs .btn-outline-primary {
+    color: #3498db;
+    border-color: #3498db;
+}
+
+.filter-tabs .btn-outline-primary:hover,
+.filter-tabs .btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
+    color: white;
+}
+
+/* Loading spinner com tema azul */
+.text-primary {
+    color: #3498db !important;
+}

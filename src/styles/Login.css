@@ -1,0 +1,176 @@
+/* Estilo do fundo */
+.login-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+/* Container do formulário */
+.login-container {
+    background-color: white;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    align-self: center;
+    border-radius: 15px;
+    height: 800px;
+    width: 900px;
+    background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(146, 200, 229,0.8));
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    opacity: 1;
+    background-color: white;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Cabeçalho */
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Botão principal */
+.login-container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.login-container button[type="submit"]:hover {
+    background-color: #0069d9;
+}
+
+/* Link "Esqueceu-se da palavra-passe?" */
+.login-container .forgot-password {
+    font-size: 0.9em;
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.login-container .forgot-password a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+/* Divisória */
+.login-container .divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 0.85em;
+    color: #888;
+}
+
+.login-container .divider::before,
+.login-container .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #484848;
+}
+
+.login-container .divider span {
+    margin: 0 10px;
+}
+
+/* Botões sociais */
+.login-container .social-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.login-container .google-button {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.login-container .linkedin-button {
+    background-color: #0077B5;
+    color: white;
+    border: none;
+}
+
+/* Link para registo */
+.login-container .register {
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.login-container .register a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+/* Mensagens de sucesso */
+.login-container p.success-message {
+    color: green;
+    font-size: 0.9em;
+    margin-top: 8px;
+}
+
+/* Mensagens de erro */
+.login-container p.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 8px;
+}
+
+.login-container .forgot-password button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #007BFF;
+    text-decoration: none; /* Removido o underline */
+    cursor: pointer;
+    font-size: 1em;
+    font-family: inherit;
+}
+.login-container .forgot-password button:hover {
+    text-decoration: underline; /* Opcional: underline aparece só no hover */
+}
+.login-container .forgot-password button:disabled {
+    color: gray;
+    cursor: not-allowed;
+    text-decoration: none;
+}

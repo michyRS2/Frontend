@@ -1,0 +1,135 @@
+.curso-recomendado {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+    font-family: var(--font-family);
+    color: var(--color-text);
+}
+
+.curso-recomendado img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Card com info do curso */
+.curso-info {
+    background: var(--color-bg-section);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: var(--spacing-section);
+}
+
+.curso-info h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-heading);
+    text-shadow:
+            0 0 6px rgba(255, 255, 255, 0.6),
+            0 0 12px rgba(111, 177, 252, 0.5);
+}
+
+.curso-info p {
+    margin: 0.3rem 0;
+    color: #f8e5e5;
+    font-weight: 500;
+}
+
+/* Botão de inscrição */
+.curso-info button {
+    margin-top: 1rem;
+    padding: 0.6rem 1.5rem;
+    background-color: var(--color-primary);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.curso-info button:hover {
+    background-color: #084bcc;
+}
+
+/* Seção de objetivos */
+.curso-recomendado section {
+    background: var(--color-bg-section);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    margin-bottom: var(--spacing-section);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+}
+
+.curso-recomendado h2 {
+    font-size: 1.5rem;
+    color: var(--color-heading);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1rem;
+}
+
+/* Módulos e aulas */
+.modulo {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modulo button {
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--color-heading);
+    font-weight: 500;
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    transition: background 0.3s ease;
+}
+
+.modulo button:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.modulo ul {
+    padding: 0.5rem 1.5rem 1rem;
+    list-style-type: disc;
+    color: #dddddd;
+}
+
+.modulo li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+
+
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .curso-recomendado {
+        padding: 1rem;
+    }
+
+    .curso-info {
+        padding: 1.2rem;
+    }
+
+    .curso-info h1 {
+        font-size: 1.6rem;
+    }
+
+    .curso-recomendado h2 {
+        font-size: 1.3rem;
+    }
+}

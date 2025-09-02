@@ -1,0 +1,351 @@
+/* NotificationBell.css */
+.notification-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-toggle {
+  border: none;
+  background: transparent !important;
+  position: relative;
+  padding: 0.5rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  text-decoration: none !important;
+}
+
+.notification-icon {
+  color: white !important;
+}
+
+.notification-toggle::after {
+  color: white !important;
+  border-top-color: white !important;
+  margin-left: 0.5rem;
+}
+
+.notification-toggle:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.notification-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.65rem;
+  padding: 0.25em 0.4em;
+}
+
+.notification-menu {
+  position: absolute;
+  right: 0;
+  left: auto !important;
+  transform: translateX(0) !important;
+  min-width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden; /* ← REMOVE SCROLL HORIZONTAL */
+  margin-top: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  z-index: 1050;
+  padding: 0 !important;
+}
+
+/* CABEÇALHO */
+.dropdown-header {
+  background: linear-gradient(135deg, #0d6efd, #0a58ca) !important;
+  color: white;
+  padding: 1rem !important;
+  margin: 0 !important;
+  border-radius: 0.5rem 0.5rem 0 0 !important;
+  border-bottom: 2px solid #0a58ca;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.header-btn {
+  color: white !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.header-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* NOTIFICAÇÕES - DIFERENÇA CLARA ENTRE LIDAS E NÃO LIDAS */
+.notification-list {
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden; /* ← REMOVE SCROLL HORIZONTAL */
+}
+
+.notification-item {
+  padding: 0;
+  border-bottom: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+/* NOTIFICAÇÃO NÃO LIDA - MUITO DESTACADA */
+.notification-item.unread {
+  background: linear-gradient(135deg, #e8f4fd, #d1e9fb) !important;
+  border-left: 4px solid #0d6efd;
+}
+
+.notification-item.unread .notification-content {
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.notification-item.unread .notification-title {
+  color: #0a58ca !important;
+  font-weight: 700;
+}
+
+.notification-item.unread .notification-message {
+  color: #495057 !important;
+  font-weight: 500;
+}
+
+.notification-item.unread .notification-time {
+  color: #0d6efd !important;
+  font-weight: 600;
+}
+
+.notification-item.unread:hover {
+  background: linear-gradient(135deg, #d1e9fb, #bad8f9) !important;
+  transform: translateX(2px);
+}
+
+/* NOTIFICAÇÃO LIDA - DISCRETA */
+.notification-item.read {
+  background-color: #f8f9fa;
+  border-left: 4px solid #adb5bd;
+}
+
+.notification-item.read .notification-title {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.notification-item.read .notification-message {
+  color: #868e96;
+}
+
+.notification-item.read .notification-time {
+  color: #adb5bd;
+}
+
+.notification-item.read:hover {
+  background-color: #e9ecef;
+}
+
+.notification-content {
+  cursor: pointer;
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+  overflow: hidden; /* ← IMPEDE OVERFLOW HORIZONTAL */
+}
+
+.notification-priority {
+  font-size: 1.1rem;
+  margin-top: 0.1rem;
+  flex-shrink: 0;
+}
+
+.notification-body {
+  flex-grow: 1;
+  min-width: 0; /* ← IMPORTANTE: Permite quebra de texto */
+  overflow: hidden; /* ← ESCONDE OVERFLOW */
+}
+
+.notification-title {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+  word-wrap: break-word; /* ← QUEBRA TEXTO LONGO */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-message {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  word-wrap: break-word; /* ← QUEBRA TEXTO LONGO */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.notification-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  padding: 0.35rem !important;
+  border-radius: 0.25rem;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.action-btn.mark-read {
+  color: #198754 !important;
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.action-btn.mark-read:hover {
+  background-color: rgba(25, 135, 84, 0.2) !important;
+}
+
+.action-btn.remove-btn {
+  color: #dc3545 !important;
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+.action-btn.remove-btn:hover {
+  background-color: rgba(220, 53, 69, 0.2) !important;
+}
+
+/* ESTADOS VAZIO E CARREGAMENTO */
+.notification-loading,
+.notification-empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #6c757d;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-text {
+  font-size: 0.9rem;
+}
+
+/* RODAPÉ */
+.notification-footer {
+  padding: 0.75rem;
+  text-align: center;
+  border-top: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.link-indicator {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+.notification-content[style*="cursor: pointer"]:hover {
+  background-color: #f0f8ff !important;
+}
+
+.notification-item.unread .link-indicator {
+  color: #0d6efd;
+}
+
+/* ANIMAÇÕES */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 576px) {
+  .notification-menu {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: calc(100vw - 20px);
+  }
+  
+  .header-title {
+    font-size: 0.9rem;
+  }
+  
+  .notification-content {
+    padding: 0.75rem;
+  }
+}
+
+.navbar .notification-dropdown {
+  position: static;
+}
+
+.navbar .notification-menu {
+  position: absolute;
+  right: 15px;
+  top: 100%;
+}
+
+.notification-toggle.show::after,
+.notification-toggle:not(.show)::after {
+  color: white !important;
+  border-top-color: white !important;
+}

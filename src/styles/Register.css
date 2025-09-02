@@ -1,0 +1,128 @@
+/* styles/Register.css */
+
+.register-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+/* Wrapper geral */
+.register-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    align-self: center;
+    border-radius: 15px;
+    height: 800px;
+    width: 900px;
+    background: linear-gradient(135deg, rgba(245, 247, 250, 0.8), rgba(146, 200, 229, 0.8));
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container do formulário */
+.register-container {
+    background-color: white;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.register-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+/* Botão principal */
+.register-container button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.register-container button[type="submit"]:hover {
+    background-color: #0069d9;
+}
+
+/* Lista de requisitos */
+.register-container ul {
+    font-size: 0.85em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+/* Link para login */
+.register-container .login-link {
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-container .login-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+/* Divisor */
+.register-container .divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 0.85em;
+    color: #888;
+}
+
+.register-container .divider::before,
+.register-container .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.register-container .divider span {
+    margin: 0 10px;
+}
+
+/* Botões sociais */
+.register-container .social-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.register-container .google-button {
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.register-container .linkedin-button {
+    background-color: #0077B5;
+    color: white;
+    border: none;
+}
