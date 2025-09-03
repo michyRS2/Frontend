@@ -6,7 +6,7 @@ import {
   Container,
   Button,
   Form,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import { FaBars, FaUser, FaSearch } from "react-icons/fa";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
@@ -19,7 +19,7 @@ import SidebarContentFormando from "../components/SidebarFormando";
 import SidebarContentGestor from "../components/SidebarGestor";
 import SidebarContentFormador from "../components/SidebarFormador";
 import NotificationBell from "../components/NotificationBell";
-import { useAuth } from "../context/authContext.jsx";
+import { useAuth } from "../context/AuthContext";
 
 const MainLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -31,15 +31,14 @@ const MainLayout = () => {
   const searchRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const {logout} = useAuth();
-
+  const { logout } = useAuth();
 
   // Rotas onde navbar/sidebar NÃO aparece
   const hideNavbarRoutes = [
     "/login",
     "/register",
     "/reset-password",
-    "/teste-backend"
+    "/teste-backend",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
@@ -73,22 +72,13 @@ const MainLayout = () => {
 
   const handleLogout = async () => {
   try {
-    await api.post("/auth/logout", {}, { withCredentials: true });
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("role");
-
-    // Atualiza estado global de auth
-    setAuth({ isAuthenticated: false, role: null });
-    // força navegação
+    await logout(); // usa a função do contexto
     navigate("/login", { replace: true });
-    // ou, se continuares preso: window.location.href = "/login";
   } catch (err) {
     console.error("Erro ao terminar sessão:", err);
   }
 };
 
-  
 
   // Fechar dropdown ao clicar fora
   useEffect(() => {
@@ -290,7 +280,7 @@ const MainLayout = () => {
               {getSidebar()}
               <div className="logout-section">
                 <hr />
-                <button className="logout-link" onClick={logout}>
+                <button className="logout-link" onClick={handleLogout}>
                   <FiLogOut size={20} className="me-2" />
                   Terminar sessão
                 </button>
