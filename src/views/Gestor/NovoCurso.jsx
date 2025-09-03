@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const API = "https://backend-4tkw.onrender.com";
+const isSincronoTipo = (tipo) => tipo?.toLowerCase() === "síncrono";
+const isAssincronoTipo = (tipo) => tipo?.toLowerCase() === "assíncrono";
+
 
 const NovoCurso = () => {
   const navigate = useNavigate();
