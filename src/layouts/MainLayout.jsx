@@ -69,16 +69,20 @@ const MainLayout = () => {
   }, [location.pathname]);
 
   const handleLogout = async () => {
-    try {
-      await api.post("/auth/logout", {}, { withCredentials: true });
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      localStorage.removeItem("role");
-      navigate("/login");
-    } catch (err) {
-      console.error("Erro ao terminar sessão:", err);
-    }
-  };
+  try {
+    await api.post("/auth/logout", {}, { withCredentials: true });
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    // força navegação
+    navigate("/login", { replace: true });
+    // ou, se continuares preso: window.location.href = "/login";
+  } catch (err) {
+    console.error("Erro ao terminar sessão:", err);
+  }
+};
+
+  
 
   // Fechar dropdown ao clicar fora
   useEffect(() => {
