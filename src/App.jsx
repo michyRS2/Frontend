@@ -35,7 +35,7 @@ import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
 import TesteBackend from "./views/TesteBackend";
 import { AuthProvider } from "./context/AuthContext";
-import NavigateToRole from "./components/NavigateToRole"; // componente que decide para onde ir conforme role
+import NavigateToRole from "./components/NavigatorRole"; // componente que decide para onde ir conforme role
 
 
 
