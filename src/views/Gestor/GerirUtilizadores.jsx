@@ -1,6 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Container, Table, Button, Badge, Modal, Form, Spinner, Alert, Row, Col, Card } from "react-bootstrap";
-import { FaCheck, FaTimes, FaEye, FaUserPlus, FaUserCheck, FaUserClock } from "react-icons/fa";
+import {
+  Container,
+  Table,
+  Button,
+  Badge,
+  Modal,
+  Form,
+  Spinner,
+  Alert,
+  Row,
+  Col,
+  Card,
+} from "react-bootstrap";
+import {
+  FaCheck,
+  FaTimes,
+  FaEye,
+  FaUserPlus,
+  FaUserCheck,
+  FaUserClock,
+} from "react-icons/fa";
 import api from "../../../axiosConfig";
 import "../../styles/GerirUtilizadores.css";
 
@@ -22,9 +41,9 @@ const GerirUtilizadores = () => {
       setLoading(true);
       const [utilizadoresRes, pedidosRes] = await Promise.all([
         api.get("/gestor/utilizadores"),
-        api.get("/gestor/pedidos-registo")
+        api.get("/gestor/pedidos-registo"),
       ]);
-      
+
       setUtilizadores(utilizadoresRes.data);
       setPedidosRegisto(pedidosRes.data);
     } catch (err) {
@@ -38,11 +57,10 @@ const GerirUtilizadores = () => {
   const handleAceitarRegisto = async (pedidoId, tipo) => {
     try {
       await api.put(`/gestor/pedidos-registo/${pedidoId}/aceitar`, { tipo });
-      
+
       // Atualizar ambas as listas
-      setPedidosRegisto(pedidosRegisto.filter(p => p.id !== pedidoId));
+      setPedidosRegisto(pedidosRegisto.filter((p) => p.id !== pedidoId));
       await carregarDados(); // Recarregar TODOS os dados
-      
     } catch (err) {
       setError("Erro ao aceitar pedido de registo");
       console.error("Erro:", err);
@@ -52,11 +70,10 @@ const GerirUtilizadores = () => {
   const handleRejeitarRegisto = async (pedidoId, tipo) => {
     try {
       await api.put(`/gestor/pedidos-registo/${pedidoId}/rejeitar`, { tipo });
-      
+
       // Atualizar ambas as listas
-      setPedidosRegisto(pedidosRegisto.filter(p => p.id !== pedidoId));
+      setPedidosRegisto(pedidosRegisto.filter((p) => p.id !== pedidoId));
       await carregarDados(); // Recarregar TODOS os dados
-      
     } catch (err) {
       setError("Erro ao rejeitar pedido de registo");
       console.error("Erro:", err);
@@ -67,14 +84,17 @@ const GerirUtilizadores = () => {
     try {
       await api.put(`/gestor/utilizadores/${userId}`, {
         estado: novoEstado,
-        tipo: tipo
+        tipo: tipo,
       });
-      
+
       // Atualizar o estado local em vez de recarregar tudo
-      setUtilizadores(prev => prev.map(user => 
-        user.id === userId ? { ...user, estado: novoEstado } : user
-      ));
-      
+      setUtilizadores((prev) =>
+        prev.map((user) =>
+          user.id === userId && user.tipo === tipo
+            ? { ...user, estado: novoEstado }
+            : user
+        )
+      );
     } catch (err) {
       setError("Erro ao alterar estado do utilizador");
       console.error("Erro:", err);
@@ -88,7 +108,7 @@ const GerirUtilizadores = () => {
 
   const filtrarUtilizadores = () => {
     if (filter === "todos") return utilizadores;
-    return utilizadores.filter(user => user.estado === filter);
+    return utilizadores.filter((user) => user.estado === filter);
   };
 
   if (loading) {
@@ -107,7 +127,11 @@ const GerirUtilizadores = () => {
         <p className="text-muted">Gerir utilizadores e pedidos de registo</p>
       </div>
 
-      {error && <Alert variant="danger" onClose={() => setError("")} dismissible>{error}</Alert>}
+      {error && (
+        <Alert variant="danger" onClose={() => setError("")} dismissible>
+          {error}
+        </Alert>
+      )}
 
       <Row>
         {/* Estatísticas */}
@@ -151,7 +175,9 @@ const GerirUtilizadores = () => {
                   <FaUserCheck />
                 </div>
                 <div className="ms-3">
-                  <h4>{utilizadores.filter(u => u.estado === 'ativo').length}</h4>
+                  <h4>
+                    {utilizadores.filter((u) => u.estado === "ativo").length}
+                  </h4>
                   <p className="text-muted mb-0">Utilizadores Ativos</p>
                 </div>
               </div>
@@ -178,27 +204,33 @@ const GerirUtilizadores = () => {
               </tr>
             </thead>
             <tbody>
-              {pedidosRegisto.map(pedido => (
+              {pedidosRegisto.map((pedido) => (
                 <tr key={pedido.id}>
                   <td>{pedido.nome}</td>
                   <td>{pedido.email}</td>
                   <td>
                     <Badge bg="info">{pedido.tipo}</Badge>
                   </td>
-                  <td>{new Date(pedido.dataPedido).toLocaleDateString('pt-PT')}</td>
+                  <td>
+                    {new Date(pedido.dataPedido).toLocaleDateString("pt-PT")}
+                  </td>
                   <td>
                     <Button
                       variant="success"
                       size="sm"
                       className="me-2"
-                      onClick={() => handleAceitarRegisto(pedido.id, pedido.tipo)}
+                      onClick={() =>
+                        handleAceitarRegisto(pedido.id, pedido.tipo)
+                      }
                     >
                       <FaCheck /> Aceitar
                     </Button>
                     <Button
                       variant="danger"
                       size="sm"
-                      onClick={() => handleRejeitarRegisto(pedido.id, pedido.tipo)}
+                      onClick={() =>
+                        handleRejeitarRegisto(pedido.id, pedido.tipo)
+                      }
                     >
                       <FaTimes /> Rejeitar
                     </Button>
@@ -215,7 +247,7 @@ const GerirUtilizadores = () => {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>Todos os Utilizadores</h4>
           <Form.Select
-            style={{ width: '200px' }}
+            style={{ width: "200px" }}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
@@ -238,28 +270,41 @@ const GerirUtilizadores = () => {
             </tr>
           </thead>
           <tbody>
-            {filtrarUtilizadores().map(user => (
-              <tr key={user.id}>
+            {filtrarUtilizadores().map((user) => (
+              <tr key={`${user.tipo}-${user.id}`}>
                 <td>{user.nome}</td>
                 <td>{user.email}</td>
                 <td>
-                  <Badge bg={
-                    user.tipo === 'gestor' ? 'primary' :
-                    user.tipo === 'formador' ? 'warning' : 'secondary'
-                  }>
+                  <Badge
+                    bg={
+                      user.tipo === "gestor"
+                        ? "primary"
+                        : user.tipo === "formador"
+                        ? "warning"
+                        : "secondary"
+                    }
+                  >
                     {user.tipo}
                   </Badge>
                 </td>
                 <td>
-                  <Badge bg={
-                    user.estado === 'ativo' ? 'success' :
-                    user.estado === 'inativo' ? 'secondary' : 
-                    user.estado === 'pendente' ? 'warning' : 'danger'
-                  }>
+                  <Badge
+                    bg={
+                      user.estado === "ativo"
+                        ? "success"
+                        : user.estado === "inativo"
+                        ? "secondary"
+                        : user.estado === "pendente"
+                        ? "warning"
+                        : "danger"
+                    }
+                  >
                     {user.estado}
                   </Badge>
                 </td>
-                <td>{new Date(user.dataRegisto).toLocaleDateString('pt-PT')}</td>
+                <td>
+                  {new Date(user.dataRegisto).toLocaleDateString("pt-PT")}
+                </td>
                 <td>
                   <Button
                     variant="outline-primary"
@@ -269,11 +314,13 @@ const GerirUtilizadores = () => {
                   >
                     <FaEye /> Detalhes
                   </Button>
-                  {user.estado === 'ativo' ? (
+                  {user.estado === "ativo" ? (
                     <Button
                       variant="outline-warning"
                       size="sm"
-                      onClick={() => handleAlterarEstado(user.id, user.tipo, 'inativo')}
+                      onClick={() =>
+                        handleAlterarEstado(user.id, user.tipo, "inativo")
+                      }
                     >
                       Desativar
                     </Button>
@@ -281,7 +328,9 @@ const GerirUtilizadores = () => {
                     <Button
                       variant="outline-success"
                       size="sm"
-                      onClick={() => handleAlterarEstado(user.id, user.tipo, 'ativo')}
+                      onClick={() =>
+                        handleAlterarEstado(user.id, user.tipo, "ativo")
+                      }
                     >
                       Ativar
                     </Button>
@@ -303,14 +352,27 @@ const GerirUtilizadores = () => {
             <Row>
               <Col md={6}>
                 <h6>Informações Pessoais</h6>
-                <p><strong>Nome:</strong> {selectedUser.nome}</p>
-                <p><strong>Email:</strong> {selectedUser.email}</p>
-                <p><strong>Tipo:</strong> {selectedUser.tipo}</p>
-                <p><strong>Estado:</strong> {selectedUser.estado}</p>
+                <p>
+                  <strong>Nome:</strong> {selectedUser.nome}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedUser.email}
+                </p>
+                <p>
+                  <strong>Tipo:</strong> {selectedUser.tipo}
+                </p>
+                <p>
+                  <strong>Estado:</strong> {selectedUser.estado}
+                </p>
               </Col>
               <Col md={6}>
                 <h6>Informações Adicionais</h6>
-                <p><strong>Data de Registo:</strong> {new Date(selectedUser.dataRegisto).toLocaleDateString('pt-PT')}</p>
+                <p>
+                  <strong>Data de Registo:</strong>{" "}
+                  {new Date(selectedUser.dataRegisto).toLocaleDateString(
+                    "pt-PT"
+                  )}
+                </p>
               </Col>
             </Row>
           )}
