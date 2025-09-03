@@ -31,6 +31,8 @@ const MainLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  
+
   // Obter a role do utilizador
   useEffect(() => {
     const checkAuthAndGetRole = async () => {
@@ -160,8 +162,15 @@ const MainLayout = () => {
   const handleClose = () => setShowSidebar(false);
   const handleShow = () => setShowSidebar(true);
 
-  const hideNavbarRoutes = ["/login", "/register", "/reset-password"];
+  const hideNavbarRoutes = ["/login", "/register", "/reset-password", "teste-backend"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+
+useEffect(() => {
+  if (!hideNavbarRoutes.includes(location.pathname)) {
+    checkAuthAndGetRole();
+  }
+}, [location, navigate]);
 
   const getSidebar = () => {
     if (userRole === "gestor") {
