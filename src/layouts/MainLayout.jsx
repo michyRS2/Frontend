@@ -162,15 +162,11 @@ const MainLayout = () => {
   const handleClose = () => setShowSidebar(false);
   const handleShow = () => setShowSidebar(true);
 
-  const hideNavbarRoutes = ["/login", "/register", "/reset-password", "teste-backend"];
+  const hideNavbarRoutes = ["/login", "/register", "/reset-password", "/teste-backend"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
 
-useEffect(() => {
-  if (!hideNavbarRoutes.includes(location.pathname)) {
-    checkAuthAndGetRole();
-  }
-}, [location, navigate]);
+
 
   const getSidebar = () => {
     if (userRole === "gestor") {
@@ -183,6 +179,12 @@ useEffect(() => {
       return null;
     }
   };
+
+  useEffect(() => {
+  if (!hideNavbarRoutes.includes(location.pathname)) {
+    checkAuthAndGetRole();
+  }
+}, [location, navigate]);
 
   // Se estiver a carregar, mostra um spinner
   if (loading && !shouldHideNavbar) {

@@ -126,10 +126,11 @@ function App() {
             element={<EditarCursoFormador />}
           />
           <Route path="/formador/cursos/:id/novo-quiz" element={<NovoQuiz />} />
-          <Route path="/teste-backend" element={<TesteBackend />} />
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="/teste-backend" element={<TesteBackend />} />
+
       </Routes>
     </Router>
   );
