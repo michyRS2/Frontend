@@ -70,7 +70,7 @@ const MainLayout = () => {
 
   const handleLogout = async () => {
     try {
-      await api.post("/logout", {}, { withCredentials: true });
+      await api.post("/auth/logout", {}, { withCredentials: true });
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("role");
