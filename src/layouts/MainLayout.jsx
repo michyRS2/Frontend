@@ -39,6 +39,7 @@ const MainLayout = () => {
     "/register",
     "/reset-password",
     "/teste-backend",
+    "/register-formador",
   ];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
