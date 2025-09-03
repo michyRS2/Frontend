@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import api from "../../axiosConfig";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../styles/Register.css";
 
 const RegisterFormador = () => {
