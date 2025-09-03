@@ -50,7 +50,7 @@ export default function Register() {
         }
 
         try {
-            await api.post('/register', {
+            await api.post('/auth/register', {
                 ...rest,
                 Password
             });
