@@ -163,6 +163,7 @@ export default function Login() {
 
                     <p className="register">
                         Não tem conta? <Link to="/register">Registe-se aqui</Link>
+                        Quer fazer parte da nossa equipa de formandores? <Link to="/register-formador">Registe-se agora</Link>
                     </p>
                 </form>
             </div>

@@ -12,6 +12,7 @@ import MainLayout from "./layouts/MainLayout";
 import Perfil from "./views/Perfil";
 import Login from "./views/Login";
 import Register from "./views/Register";
+import RegisterFormador from "./views/RegisterFormador";
 import DashboardFormando from "./views/Formando/DashboardFormando";
 import CursoRecomendado from "./views/Formando/CursoRecomendado";
 import CursoInscrito from "./views/Formando/CursoInscrito";
@@ -50,6 +51,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/register-formador" element={<RegisterFormador/>} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/search" element={<SearchResults />} />
             
