@@ -8,7 +8,7 @@ import {
   Form,
   Spinner
 } from "react-bootstrap";
-import { FaBars, FaBell, FaUser, FaSearch } from "react-icons/fa";
+import { FaBars, FaUser, FaSearch } from "react-icons/fa";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import api from "../../axiosConfig.js";
 import { FiLogOut } from "react-icons/fi";
@@ -31,48 +31,46 @@ const MainLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  
+  // Rotas onde navbar/sidebar NÃO aparece
+  const hideNavbarRoutes = [
+    "/login",
+    "/register",
+    "/reset-password",
+    "/teste-backend"
+  ];
+  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
-  // Obter a role do utilizador
-  useEffect(() => {
-    const checkAuthAndGetRole = async () => {
-      try {
-        // Primeiro, tenta obter do localStorage
-        const savedRole = localStorage.getItem("role");
-        if (savedRole) {
-          setUserRole(savedRole);
-          setLoading(false);
-          return;
-        }
-
-        // Se não estiver no localStorage, verifica a autenticação
-        const res = await api.get('/auth/check', {
-          withCredentials: true,
-        });
-
-        const { role } = res.data.user;
-        setUserRole(role);
-        localStorage.setItem("role", role);
+  // Função para verificar autenticação e role
+  const checkAuthAndGetRole = async () => {
+    try {
+      const savedRole = localStorage.getItem("role");
+      if (savedRole) {
+        setUserRole(savedRole);
         setLoading(false);
-      } catch (err) {
-        console.error("Erro ao verificar autenticação:", err);
-        // Se não estiver autenticado, redireciona para login
-        navigate("/login");
+        return;
       }
-    };
 
-    if (!location.pathname.includes("/login")) {
+      const res = await api.get("/auth/check", { withCredentials: true });
+      const { role } = res.data.user;
+      setUserRole(role);
+      localStorage.setItem("role", role);
+      setLoading(false);
+    } catch (err) {
+      console.error("Erro ao verificar autenticação:", err);
+      navigate("/login");
+    }
+  };
+
+  // Só corre autenticação em páginas que não estão escondidas
+  useEffect(() => {
+    if (!shouldHideNavbar) {
       checkAuthAndGetRole();
     }
-  }, [location, navigate]);
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
-      await api.post(
-        "/logout",
-        {},
-        { withCredentials: true }
-      );
+      await api.post("/logout", {}, { withCredentials: true });
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("role");
@@ -82,29 +80,24 @@ const MainLayout = () => {
     }
   };
 
-  // Fechar resultados quando clicar fora
+  // Fechar dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setShowResults(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Buscar cursos em tempo real
+  // Pesquisa de cursos
   useEffect(() => {
     if (searchTerm.length > 1) {
       const fetchCourses = async () => {
         try {
           const response = await api.get(
-            `/cursos/search?query=${encodeURIComponent(
-              searchTerm
-            )}`
+            `/cursos/search?query=${encodeURIComponent(searchTerm)}`
           );
           setSearchResults(response.data);
           setShowResults(true);
@@ -114,7 +107,6 @@ const MainLayout = () => {
         }
       };
 
-      // Debounce para evitar muitas chamadas
       const timer = setTimeout(fetchCourses, 300);
       return () => clearTimeout(timer);
     } else {
@@ -137,59 +129,41 @@ const MainLayout = () => {
     if (searchTerm.trim() && searchResults.length > 0) {
       const firstCourseId = searchResults[0].id;
       navigate(`/cursos/${firstCourseId}`);
-      setSearchTerm("");
-      setShowResults(false);
     } else if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-      setSearchTerm("");
-      setShowResults(false);
     }
+    setSearchTerm("");
+    setShowResults(false);
   };
 
   const handleSearchButtonClick = () => {
     if (searchTerm.trim() && searchResults.length > 0) {
       const firstCourseId = searchResults[0].id;
       navigate(`/cursos/${firstCourseId}`);
-      setSearchTerm("");
-      setShowResults(false);
     } else if (searchTerm.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
-      setSearchTerm("");
-      setShowResults(false);
     }
+    setSearchTerm("");
+    setShowResults(false);
   };
 
   const handleClose = () => setShowSidebar(false);
   const handleShow = () => setShowSidebar(true);
 
-  const hideNavbarRoutes = ["/login", "/register", "/reset-password", "/teste-backend"];
-  const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
-
-
-
-
   const getSidebar = () => {
-    if (userRole === "gestor") {
-      return <SidebarContentGestor />;
-    } else if (userRole === "formador") {
-      return <SidebarContentFormador />;
-    } else if (userRole === "formando") {
-      return <SidebarContentFormando />;
-    } else {
-      return null;
-    }
+    if (userRole === "gestor") return <SidebarContentGestor />;
+    if (userRole === "formador") return <SidebarContentFormador />;
+    if (userRole === "formando") return <SidebarContentFormando />;
+    return null;
   };
 
-  useEffect(() => {
-  if (!hideNavbarRoutes.includes(location.pathname)) {
-    checkAuthAndGetRole();
-  }
-}, [location, navigate]);
-
-  // Se estiver a carregar, mostra um spinner
+  // Loader
   if (loading && !shouldHideNavbar) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
         <Spinner animation="border" variant="primary" />
       </div>
     );
@@ -209,7 +183,7 @@ const MainLayout = () => {
             </Button>
             <Navbar.Brand href="/">SoftSkills</Navbar.Brand>
 
-            {/* Barra de Pesquisa com resultados em tempo real */}
+            {/* Pesquisa */}
             <div className="position-relative flex-grow-1 me-3" ref={searchRef}>
               <Form onSubmit={handleSearchSubmit}>
                 <div className="input-group search-container">
@@ -240,7 +214,7 @@ const MainLayout = () => {
                 </div>
               </Form>
 
-              {/* Dropdown de resultados */}
+              {/* Resultados */}
               {showResults && searchResults.length > 0 && (
                 <div className="search-results-dropdown">
                   {searchResults.map((course) => (
@@ -256,8 +230,6 @@ const MainLayout = () => {
                         <span className="course-category">
                           {course.category || "Categoria desconhecida"}
                         </span>
-
-                        {/* Mostrar período em vez de duração */}
                         {course.startDate && course.endDate && (
                           <span className="course-period">
                             {new Date(course.startDate).toLocaleDateString()} -{" "}
@@ -267,7 +239,6 @@ const MainLayout = () => {
                       </div>
                     </div>
                   ))}
-                  
                   <div
                     className="search-result-item view-all"
                     onClick={() => {
@@ -281,7 +252,7 @@ const MainLayout = () => {
                 </div>
               )}
 
-              {/* Mensagem quando não há resultados */}
+              {/* Sem resultados */}
               {showResults && searchResults.length === 0 && (
                 <div className="search-results-dropdown no-results">
                   Nenhum curso encontrado
