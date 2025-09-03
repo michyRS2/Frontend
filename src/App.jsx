@@ -34,6 +34,7 @@ import QuizCurso from "./views/Formando/QuizCurso";
 import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
 import TesteBackend from "./views/TesteBackend";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -60,6 +61,7 @@ function App() {
   if (loading) return <p>Carregando...</p>;
 
   return (
+    <AuthProvider>
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />}>
@@ -133,6 +135,7 @@ function App() {
 
       </Routes>
     </Router>
+    </AuthProvider>
   );
 }
 

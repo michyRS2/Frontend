@@ -19,6 +19,7 @@ import SidebarContentFormando from "../components/SidebarFormando";
 import SidebarContentGestor from "../components/SidebarGestor";
 import SidebarContentFormador from "../components/SidebarFormador";
 import NotificationBell from "../components/NotificationBell";
+import { useAuth } from "../context/authContext.jsx";
 
 const MainLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -30,6 +31,8 @@ const MainLayout = () => {
   const searchRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const {logout} = useAuth();
+
 
   // Rotas onde navbar/sidebar NÃO aparece
   const hideNavbarRoutes = [
@@ -74,6 +77,9 @@ const MainLayout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
+
+    // Atualiza estado global de auth
+    setAuth({ isAuthenticated: false, role: null });
     // força navegação
     navigate("/login", { replace: true });
     // ou, se continuares preso: window.location.href = "/login";
@@ -284,7 +290,7 @@ const MainLayout = () => {
               {getSidebar()}
               <div className="logout-section">
                 <hr />
-                <button className="logout-link" onClick={handleLogout}>
+                <button className="logout-link" onClick={logout}>
                   <FiLogOut size={20} className="me-2" />
                   Terminar sessão
                 </button>
