@@ -33,7 +33,7 @@ import SearchResults from "./components/SearchResults";
 import QuizCurso from "./views/Formando/QuizCurso";
 import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
-
+import TesteBackend from "./views/TesteBackend";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,6 @@ function App() {
               )
             }
           />
-
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -89,36 +88,45 @@ function App() {
           <Route path="/search" element={<SearchResults />} />
           {/* Protected Routes */}
           <Route path="/perfil" element={<Perfil />} />
-          
           {/* Formando Routes */}
           <Route path="/formando/dashboard" element={<DashboardFormando />} />
           <Route path="/cursos/:cursoId" element={<CursoRecomendado />} />
           <Route path="/cursosInscritos/:cursoId" element={<CursoInscrito />} />
           <Route path="/forum" element={<Forum />} />
-          <Route path="/formando/topico/:topicoId/cursos" element={<CursosTopico />} /> {/* Nova rota */}
-
+          <Route
+            path="/formando/topico/:topicoId/cursos"
+            element={<CursosTopico />}
+          />{" "}
+          {/* Nova rota */}
           <Route path="/quiz/curso/:id" element={<QuizCurso />} />
           <Route path="/quiz/:quizId" element={<QuizResponder />} />
-
-
           {/* Gestor Routes */}
           <Route path="/gestor/dashboard" element={<DashboardGestor />} />
           <Route path="/gestor/criar-curso" element={<NovoCurso />} />
           <Route path="/gestor/cursos/editar/:id" element={<EditarCurso />} />
           <Route path="/gestor/gerircategorias" element={<GerirCategorias />} />
           <Route path="/gestor/novacategoria" element={<NovaCategoria />} />
-          <Route path="/gestor/editarcategoria/:id" element={<EditarCategoria />} />
-          <Route path="/gestor/gerir-utilizadores" element={<GerirUtilizadores />} />
+          <Route
+            path="/gestor/editarcategoria/:id"
+            element={<EditarCategoria />}
+          />
+          <Route
+            path="/gestor/gerir-utilizadores"
+            element={<GerirUtilizadores />}
+          />
           <Route path="/gestor/cursos/:id/novo-quiz" element={<NovoQuiz />} />
-          <Route path="/gestor/cursos/:cursoId/modulos" element={<ModulosAulas />}/>
-
+          <Route
+            path="/gestor/cursos/:cursoId/modulos"
+            element={<ModulosAulas />}
+          />
           {/* Formador Routes */}
           <Route path="/formador/dashboard" element={<DashboardFormador />} />
-          <Route path="/formador/editar-curso/:id" element={<EditarCursoFormador />} />
-          
+          <Route
+            path="/formador/editar-curso/:id"
+            element={<EditarCursoFormador />}
+          />
           <Route path="/formador/cursos/:id/novo-quiz" element={<NovoQuiz />} />
-
-
+          <Route path="/teste-backend" element={<TesteBackend />} />
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Route>
