@@ -10,6 +10,7 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
   const [curso, setCurso] = useState(initialCurso);
   const [hover, setHover] = useState(null);
   const [quizzesCount, setQuizzesCount] = useState(undefined);
+  const [avaliacoes, setAvaliacoes] = useState([]);
   const navigate = useNavigate();
 
   const image = curso.Imagem || "default-image-url.jpg";
@@ -18,8 +19,6 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
       ? curso.Formador
       : curso.Formador?.Nome || curso.Formador || "Não especificado";
 
-  const rating = Number(curso.Rating ?? curso.rating ?? 0);
-  const numAval = Number(curso.Numero_Avaliacoes ?? curso.numeroAvaliacoes ?? 0);
   const minhaAvaliacao = curso.Minha_Avaliacao ?? curso.minhaAvaliacao ?? null;
 
   // buscar nº de quizzes
@@ -44,6 +43,34 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
     return () => { alive = false; };
   }, [curso.ID_Curso]);
 
+  // buscar avaliações
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliacoes`, {
+          credentials: "include",
+        });
+        if (!alive) return;
+        if (res.ok) {
+          const data = await res.json();
+          setAvaliacoes(Array.isArray(data.avaliacoes) ? data.avaliacoes : []);
+        } else {
+          setAvaliacoes([]);
+        }
+      } catch {
+        setAvaliacoes([]);
+      }
+    })();
+    return () => { alive = false; };
+  }, [curso.ID_Curso]);
+
+  // calcular média
+  const numAval = avaliacoes.length;
+  const rating = numAval
+    ? avaliacoes.reduce((sum, a) => sum + Number(a.nota || 0), 0) / numAval
+    : 0;
+
   async function handleRate(nota) {
     try {
       const url = `${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliar`;
@@ -59,15 +86,14 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
         return alert(`Erro ${res.status}: ${await res.text()}`);
       }
       const data = await res.json();
+      // atualizar avaliação do utilizador
       setCurso((c) => ({
         ...c,
-        Rating: data.Rating,
-        rating: data.Rating,
-        Numero_Avaliacoes: data.Numero_Avaliacoes,
-        numeroAvaliacoes: data.Numero_Avaliacoes,
         Minha_Avaliacao: data.Minha_Avaliacao,
         minhaAvaliacao: data.Minha_Avaliacao,
       }));
+      // atualizar lista de avaliações para recalcular média
+      setAvaliacoes(data.avaliacoes || avaliacoes);
     } catch {
       alert("Não foi possível enviar a avaliação.");
     }
@@ -86,19 +112,18 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
           onMouseEnter={() => setHover(i)}
           onMouseLeave={() => setHover(null)}
           onClick={() => {
-          if (minhaAvaliacao === i) {
-            // clicou na mesma estrela → cancelar avaliação
-            handleRate(0);
-          } else {
-            handleRate(i);
-          }
-        }}
+            if (minhaAvaliacao === i) {
+              handleRate(0); // cancelar avaliação
+            } else {
+              handleRate(i);
+            }
+          }}
         />
       ))}
     </div>
   );
 
-  // rota de detalhes (funciona para todos os cursos)
+  // rota de detalhes
   const handleVerDetalhes = () => {
     const rota = curso.inscrito
       ? `/cursosInscritos/${curso.ID_Curso}`
@@ -125,31 +150,28 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
           </Card.Text>
 
           {!hideRatings && (
-  <Card.Text>
-    <strong>A minha avaliação:</strong> {renderStars()}
-    <div style={{ fontSize: 12, marginTop: 4 }}>
-      {minhaAvaliacao != null ? `Deu ${minhaAvaliacao} ⭐` : "Ainda não avaliou"}
-    </div>
-    <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
-      <strong>Média do curso:</strong> {Number(rating).toFixed(2)} ({numAval} avaliações)
-    </div>
-  </Card.Text>
-)}
+            <Card.Text>
+              <strong>A minha classificação:</strong> {renderStars()}
+              
+              <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
+                <strong>⭐</strong> {rating.toFixed(2)} ({numAval} classificações)
+              </div>
+            </Card.Text>
+          )}
 
-{!hideButtons && (
-  <div className="d-flex gap-2">
-    <Button variant="primary" onClick={handleVerDetalhes}>
-      Ver Detalhes
-    </Button>
-    <Button
-      variant={hasQuiz ? "warning" : "outline-secondary"}
-      onClick={handleAbrirQuiz}
-    >
-      Ver Quiz
-    </Button>
-  </div>
-)}
-
+          {!hideButtons && (
+            <div className="d-flex gap-2">
+              <Button variant="primary" onClick={handleVerDetalhes}>
+                Ver Detalhes
+              </Button>
+              <Button
+                variant={hasQuiz ? "warning" : "outline-secondary"}
+                onClick={handleAbrirQuiz}
+              >
+                Ver Quiz
+              </Button>
+            </div>
+          )}
         </Card.Body>
       </Card>
     </div>
