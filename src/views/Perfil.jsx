@@ -144,23 +144,7 @@ const Perfil = () => {
                                 </Button>
                             </div>
 
-                            <div className="security-item mt-4">
-                                <div className="security-info">
-                                    <h6>Autenticação de dois fatores</h6>
-                                    <p>Proteção adicional para a sua conta</p>
-                                </div>
-                                <div className="form-check form-switch">
-                                    <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        id="twoFactorSwitch"
-                                        disabled
-                                    />
-                                    <label className="form-check-label" htmlFor="twoFactorSwitch">
-                                        Ativar (em breve)
-                                    </label>
-                                </div>
-                            </div>
+                            
                         </Card.Body>
                     </Card>
                 </Col>
