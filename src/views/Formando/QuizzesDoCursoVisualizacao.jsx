@@ -98,18 +98,13 @@ export default function QuizzesDoCursoVisualizacao() {
                         )}
                       </div>
                       <ProgressBar
-                        now={q.ultimaPercent || 0}
-                        label={`${q.ultimaPercent || 0}%`}
-                        className={
-                          q.ultimaPercent < 50
-                            ? "bg-danger"
-                            : q.ultimaPercent < 80
-                            ? "bg-warning"
-                            : "bg-success"
-                        }
-                        animated
-                        striped
-                      />
+  now={q.ultimaPercent || 0}
+  label={`${q.ultimaPercent || 0}%`}
+  variant={getProgressVariant(q.ultimaPercent)}
+  animated
+  striped
+/>
+
                     </>
                   ) : (
                     <Badge bg="secondary">Por fazer</Badge>
