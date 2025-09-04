@@ -3,6 +3,7 @@ import { Container, Spinner } from "react-bootstrap";
 import formandoService from "../../services/formandoService";
 import CursoCard from "../../components/CursoCard";
 import ForumCard from "../../components/ForumCard";
+import PercursoCard from "../../components/PercursoCard";
 import "../../styles/dashboardFormando.css";
 
 const API = "https://backend-4tkw.onrender.com";
@@ -223,23 +224,7 @@ const DashboardFormando = () => {
       <div className="scroll-carousel">
         {percursoFormativo.map((etapa) => (
           <div key={etapa.ID_Etapa} className="carousel-item-card">
-            <CursoCard curso={etapa} />
-
-            {etapa.ID_Curso && (
-              <>
-                <div className="text-center mt-2 small text-muted">
-                  Quizzes: <strong>{quizCounts[etapa.ID_Curso] ?? "—"}</strong>
-                </div>
-                <div className="text-center mt-2">
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => navigate(`/quiz/curso/${etapa.ID_Curso}`)}
-                  >
-                    Ver Percurso Formativo
-                  </button>
-                </div>
-              </>
-            )}
+            <PercursoCard curso={etapa} />
           </div>
         ))}
       </div>

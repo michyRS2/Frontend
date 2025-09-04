@@ -6,7 +6,7 @@ import "../styles/CursoCard.css";
 
 const BASE_URL = "https://backend-4tkw.onrender.com";
 
-const CursoCard = ({ curso: initialCurso }) => {
+const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = false }) => {
   const [curso, setCurso] = useState(initialCurso);
   const [hover, setHover] = useState(null);
   const [quizzesCount, setQuizzesCount] = useState(undefined);
@@ -124,27 +124,32 @@ const CursoCard = ({ curso: initialCurso }) => {
             <strong>Formador:</strong> {formador}
           </Card.Text>
 
-          <Card.Text>
-            <strong>A minha avaliação:</strong> {renderStars()}
-            <div style={{ fontSize: 12, marginTop: 4 }}>
-              {minhaAvaliacao != null ? `Deu ${minhaAvaliacao} ⭐` : "Ainda não avaliou"}
-            </div>
-            <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
-              <strong>Média do curso:</strong> {Number(rating).toFixed(2)} ({numAval} avaliações)
-            </div>
-          </Card.Text>
+          {!hideRatings && (
+  <Card.Text>
+    <strong>A minha avaliação:</strong> {renderStars()}
+    <div style={{ fontSize: 12, marginTop: 4 }}>
+      {minhaAvaliacao != null ? `Deu ${minhaAvaliacao} ⭐` : "Ainda não avaliou"}
+    </div>
+    <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
+      <strong>Média do curso:</strong> {Number(rating).toFixed(2)} ({numAval} avaliações)
+    </div>
+  </Card.Text>
+)}
 
-          <div className="d-flex gap-2">
-            <Button variant="primary" onClick={handleVerDetalhes}>
-              Ver Detalhes
-            </Button>
-            <Button
-              variant={hasQuiz ? "warning" : "outline-secondary"}
-              onClick={handleAbrirQuiz}
-            >
-              Ver Quiz
-            </Button>
-          </div>
+{!hideButtons && (
+  <div className="d-flex gap-2">
+    <Button variant="primary" onClick={handleVerDetalhes}>
+      Ver Detalhes
+    </Button>
+    <Button
+      variant={hasQuiz ? "warning" : "outline-secondary"}
+      onClick={handleAbrirQuiz}
+    >
+      Ver Quiz
+    </Button>
+  </div>
+)}
+
         </Card.Body>
       </Card>
     </div>
