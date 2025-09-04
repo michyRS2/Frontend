@@ -80,39 +80,52 @@ const CursoCard = ({
   }, [curso.ID_Curso]);
 
   // calcular média
-  const numAval = avaliacoes.length;
-  const rating = numAval
-    ? avaliacoes.reduce((sum, a) => sum + Number(a.nota || 0), 0) / numAval
-    : 0;
+  const rating = avaliacoes.length
+  ? avaliacoes
+      .map(a => Number(a.nota) || 0) // força número
+      .reduce((sum, n) => sum + n, 0) / avaliacoes.length
+  : Number(curso.Rating ?? curso.rating ?? 0);
+
 
   async function handleRate(nota) {
-    try {
-      const url = `${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliar`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ nota }),
-      });
-      if (!res.ok) {
-        if (res.status === 403)
-          return alert("Tem de estar inscrito para avaliar.");
-        if (res.status === 401) return alert("Sessão expirada. Inicie sessão.");
-        return alert(`Erro ${res.status}: ${await res.text()}`);
+  try {
+    const url = `${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliar`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ nota }),
+    });
+    if (!res.ok) throw new Error(await res.text());
+
+    const data = await res.json();
+
+    setCurso(c => ({
+      ...c,
+      Minha_Avaliacao: data.Minha_Avaliacao,
+      minhaAvaliacao: data.Minha_Avaliacao,
+    }));
+
+    // Atualiza avaliacoes localmente
+    setAvaliacoes(prev => {
+      const exists = prev.find(a => a.idUser === data.Minha_Avaliacao?.idUser);
+      if (exists) {
+        // substitui nota do utilizador
+        return prev.map(a =>
+          a.idUser === data.Minha_Avaliacao.idUser
+            ? { ...a, nota: data.Minha_Avaliacao.nota }
+            : a
+        );
+      } else {
+        // adiciona nova avaliação
+        return [...prev, data.Minha_Avaliacao];
       }
-      const data = await res.json();
-      // atualizar avaliação do utilizador
-      setCurso((c) => ({
-        ...c,
-        Minha_Avaliacao: data.Minha_Avaliacao,
-        minhaAvaliacao: data.Minha_Avaliacao,
-      }));
-      // atualizar lista de avaliações para recalcular média
-      setAvaliacoes(data.avaliacoes || avaliacoes);
-    } catch {
-      alert("Não foi possível enviar a avaliação.");
-    }
+    });
+  } catch (err) {
+    alert("Não foi possível enviar a avaliação.");
   }
+}
+
 
   // estrelas interativas
   const displayed = hover ?? (minhaAvaliacao != null ? minhaAvaliacao : 0);
