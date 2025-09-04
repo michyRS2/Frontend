@@ -214,31 +214,39 @@ const DashboardFormando = () => {
 
         {/* Percurso Formativo */}
         {percursoFormativo && percursoFormativo.length > 0 && (
-          <section className="mt-5 carousel-section">
-            <div className="section-header">
-              <h2>Percurso Formativo</h2>
-              <p className="section-description">
-                O seu plano de aprendizagem personalizado
-              </p>
-            </div>
-            <div className="carousel-container">
-              <div className="scroll-carousel">
-                {percursoFormativo.map((etapa) => (
-                  <div key={etapa.ID_Etapa} className="carousel-item-card">
-                    <CursoCard curso={etapa} />
-                    {/* se etapa também tiver ID_Curso e quiseres mostrar: */}
-                    {etapa.ID_Curso && (
-                      <div className="text-center mt-2 small text-muted">
-                        Quizzes:{" "}
-                        <strong>{quizCounts[etapa.ID_Curso] ?? "—"}</strong>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+  <section className="mt-5 carousel-section">
+    <div className="section-header">
+      <h2>Percurso Formativo</h2>
+      <p>O seu plano de aprendizagem personalizado</p>
+    </div>
+    <div className="carousel-container">
+      <div className="scroll-carousel">
+        {percursoFormativo.map((etapa) => (
+          <div key={etapa.ID_Etapa} className="carousel-item-card">
+            <CursoCard curso={etapa} />
+
+            {etapa.ID_Curso && (
+              <>
+                <div className="text-center mt-2 small text-muted">
+                  Quizzes: <strong>{quizCounts[etapa.ID_Curso] ?? "—"}</strong>
+                </div>
+                <div className="text-center mt-2">
+                  <button
+                    className="btn btn-primary btn-sm"
+                    onClick={() => navigate(`/quiz/curso/${etapa.ID_Curso}`)}
+                  >
+                    Ver Percurso Formativo
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
 
         {/* Últimos Tópicos do Fórum */}
         <section className="mt-5 carousel-section">
