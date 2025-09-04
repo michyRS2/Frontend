@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Alert } from 'react-bootstrap';
 import PerfilCard from '../components/PerfilCard.jsx';
 import '../styles/Perfil.css';
 import api from '../../axiosConfig';
-import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {
     const [stats, setStats] = useState({
@@ -21,7 +20,6 @@ const Perfil = () => {
     const [loadingStats, setLoadingStats] = useState(true);
     const [error, setError] = useState('');
     const [userEmail, setUserEmail] = useState('');
-    
 
     // Buscar estatísticas do perfil
     useEffect(() => {
@@ -30,12 +28,35 @@ const Perfil = () => {
                 setLoadingStats(true);
                 setError('');
 
-                const response = await api.get('/perfil');
-                setUserEmail(response.data.Email);
+                // Obter dados do dashboard para calcular estatísticas
+                const dashboardResponse = await api.get('/dashboard');
+                const dashboardData = dashboardResponse.data;
+
+                setUserEmail(dashboardData.Email || '');
+
+                const cursosInscritos = dashboardData.cursosInscritos || [];
+
+                // calcular cursos concluídos
+                const completedCourses = cursosInscritos.filter(curso => {
+                    const progresso = curso.quizProgress ?? 0;
+                    return progresso === 100;
+                }).length;
+
+                // calcular progresso médio ponderado
+                let totalPercent = 0;
+                let totalQuizzes = 0;
+                cursosInscritos.forEach(curso => {
+                    const quizzesCount = curso.quizCounts ?? 0;
+                    const progresso = curso.quizProgress ?? 0;
+                    totalPercent += progresso * quizzesCount;
+                    totalQuizzes += quizzesCount;
+                });
+                const averageProgress = totalQuizzes > 0 ? Math.round(totalPercent / totalQuizzes) : 0;
+
                 setStats({
-                    completedCourses: response.data.completedCourses || 0,
-                    averageProgress: response.data.averageProgress || 0,
-                    hoursTrained: response.data.hoursTrained || 0
+                    completedCourses,
+                    averageProgress,
+                    hoursTrained: dashboardData.hoursTrained || 0
                 });
 
                 setLoadingStats(false);
@@ -43,7 +64,7 @@ const Perfil = () => {
                 console.error('Erro ao carregar estatísticas:', err);
 
                 if (err.response?.status === 401) {
-                    setError('Sua sessão expirou. Por favor, faça login novamente.');
+                    setError('A sua sessão expirou. Por favor, faça login novamente.');
                 } else {
                     setError('Erro ao carregar estatísticas do perfil');
                 }
@@ -55,7 +76,6 @@ const Perfil = () => {
         fetchStats();
     }, []);
 
-
     const handlePasswordRecovery = async () => {
         if (!userEmail) {
             setPasswordError('Email não disponível');
@@ -63,10 +83,10 @@ const Perfil = () => {
         }
         try {
             await api.post('auth/request-password-reset', { email: userEmail });
-            setPasswordError(''); // Limpa erro anterior
-            setPasswordSuccess('Email de recuperação enviado! Verifique sua caixa de entrada.');
+            setPasswordError('');
+            setPasswordSuccess('Email de recuperação enviado! Verifique a sua caixa de entrada.');
         } catch (err) {
-            setPasswordSuccess(''); // Limpa sucesso anterior
+            setPasswordSuccess('');
             setPasswordError(err.response?.data?.message || 'Erro ao enviar email de recuperação');
         }
     };
@@ -118,10 +138,11 @@ const Perfil = () => {
                             {passwordSuccess && <Alert variant="success" className="mt-3">{passwordSuccess}</Alert>}
                             {passwordError && <Alert variant="danger" className="mt-3">{passwordError}</Alert>}
                             <h5 className="card-title">Segurança da Conta</h5>
+
                             <div className="security-item mt-4">
                                 <div className="security-info">
                                     <h6>Recuperação de Senha</h6>
-                                    <p>Esqueceu sua senha? Solicite um link de recuperação</p>
+                                    <p>Esqueceu a sua senha? Solicite um link de recuperação</p>
                                 </div>
                                 <Button
                                     variant="outline-primary"
@@ -129,13 +150,12 @@ const Perfil = () => {
                                 >
                                     Enviar Email de Recuperação
                                 </Button>
-
                             </div>
 
                             <div className="security-item mt-4">
                                 <div className="security-info">
                                     <h6>Autenticação de dois fatores</h6>
-                                    <p>Proteção adicional para sua conta</p>
+                                    <p>Proteção adicional para a sua conta</p>
                                 </div>
                                 <div className="form-check form-switch">
                                     <input
