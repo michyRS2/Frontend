@@ -100,6 +100,7 @@ const CursoRecomendado = () => {
               <p><strong>Categoria:</strong> {curso.Categoria}</p>
               <p><strong>Formador:</strong> {curso.Formador || "Não especificado"}</p>
               <p><strong>Tipo:</strong> {curso.Tipo_Curso}</p>
+              <p><strong>Descrição: {curso.Descricao}</strong></p>
 
               {jaInscrito ? (
                   <p className="status-active"><strong>✅ Estás inscrito neste curso</strong></p>
