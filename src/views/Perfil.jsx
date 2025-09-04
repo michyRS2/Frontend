@@ -29,7 +29,7 @@ const Perfil = () => {
                 setError('');
 
                 // Obter dados do dashboard para calcular estatísticas
-                const dashboardResponse = await api.get('/dashboard');
+                const dashboardResponse = await api.get('/formando/dashboard');
                 const dashboardData = dashboardResponse.data;
 
                 setUserEmail(dashboardData.Email || '');
