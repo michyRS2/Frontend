@@ -50,17 +50,17 @@ const DashboardFormando = () => {
         const pairs = await Promise.all(
   Array.from(ids).map(async (id) => {
     try {
-      const r = await fetch(`${API}/api/curso/${id}/quizzes`, {
-        credentials: "include",
-      });
-      if (!r.ok) return [id, { totalQuizzes: 0, progressoMedio: 0 }];
-      const data = await r.json();
+      const r = await fetch(`${API}/api/curso/${id}/quizzes/progresso`, {
+  credentials: "include",
+});
+if (!r.ok) return [id, { totalQuizzes: 0, progressoMedio: 0 }];
+const data = await r.json();
 
-      // data.mediaPercent já é a média do progresso
-      const progressoMedio = Number(data.mediaPercent || 0);
-      const totalQuizzes = Array.isArray(data.quizzes) ? data.quizzes.length : 0;
+const progressoMedio = Number(data.mediaPercent ?? 0);
+const totalQuizzes = data.total ?? 0;
 
-      return [id, { totalQuizzes, progressoMedio }];
+return [id, { totalQuizzes, progressoMedio }];
+
     } catch {
       return [id, { totalQuizzes: 0, progressoMedio: 0 }];
     }
