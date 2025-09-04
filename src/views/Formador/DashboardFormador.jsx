@@ -28,9 +28,17 @@ const DashboardFormador = () => {
 
   useEffect(() => {
     api
-      .get(`/formador/dashboard`)
-      .then((res) => setCursos(res.data.cursosDoFormador || []))
-      .catch((err) => console.error("Erro ao carregar cursos:", err));
+  .get(`/formador/dashboard`, { withCredentials: true })
+  .then((res) => {
+    setCursos(res.data.cursosDoFormador || []);
+    setLoading(false);
+  })
+  .catch((err) => {
+    console.error("Erro ao carregar cursos:", err);
+    setError("Erro ao carregar os cursos");
+    setLoading(false);
+  });
+
   }, []);
 
   // buscar nº de quizzes por curso
