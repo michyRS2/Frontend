@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../axiosConfig.js";
 import { useParams, useNavigate } from "react-router-dom";
-import "../../styles/CursoRecomendado.css";
+import "../../styles/CursoStyles.css";
 
 const CursoInscrito = () => {
   const { cursoId } = useParams();
@@ -25,109 +25,105 @@ const CursoInscrito = () => {
     );
   };
 
-  if (!curso) return <p className="text-center mt-5">A carregar...</p>;
+  if (!curso) return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Carregando curso...</p>
+      </div>
+  );
 
   return (
-    <div className="curso-recomendado">
-      <div className="mb-3 text-start">
-        <button className="btn btn-secondary" onClick={() => navigate(-1)}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill="#ffffffff"
-          >
-            <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
-          </svg>
-          <span className="ms-2">Voltar</span>
-        </button>
-      </div>
-      <img src={curso.Imagem} alt={curso.Nome_Curso} className="img-fluid" />
+    <div className="curso-page">
+        <div className="curso-container">
+          <button className="btn-voltar" onClick={() => navigate(-1)}>
+            <i className="fas fa-arrow-left"></i>
+            <span className="ms-2">Voltar</span>
+          </button>
 
-      <div className="curso-info mt-3">
-        <h1>{curso.Nome_Curso}</h1>
-        <p>
-          <strong>Categoria:</strong> {curso.Categoria}
-        </p>
-        <p>
-          <strong>Formador:</strong> {curso.Formador || "Não especificado"}
-        </p>
+          <div className="curso-header">
+            <h1>{curso.Nome_Curso}</h1>
+            <p>Confira os detalhes do curso e acesse os materiais</p>
+          </div>
 
-        <p>
-          <strong>Tipo:</strong> {curso.Tipo_Curso}
-        </p>
-        <p className="text-success mt-3 fw-bold">
-          ✅ Estás inscrito neste curso
-        </p>
-      </div>
+          <div className="curso-card">
+            <img src={curso.Imagem} alt={curso.Nome_Curso} className="curso-imagem" />
 
-      {curso.Objetivos?.length > 0 && (
-        <section className="mt-4">
-          <h2>O que vai aprender</h2>
-          <ul>
-            {curso.Objetivos.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </section>
-      )}
+            <div className="curso-info">
+              <h2><i className="fas fa-info-circle"></i> Informações do Curso</h2>
+              <p><strong>Categoria:</strong> {curso.Categoria}</p>
+              <p><strong>Formador:</strong> {curso.Formador || "Não especificado"}</p>
+              <p><strong>Tipo:</strong> {curso.Tipo_Curso}</p>
+              <p className="status-active"><strong>✅ Estás inscrito neste curso</strong></p>
+            </div>
 
-      {curso.Includes?.length > 0 && (
-        <section className="mt-4">
-          <h2>Inclui</h2>
-          <ul>
-            {curso.Includes.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </section>
-      )}
+            {curso.Objetivos?.length > 0 && (
+                <div className="curso-info">
+                  <h2><i className="fas fa-bullseye"></i> O que vai aprender</h2>
+                  <ul>
+                    {curso.Objetivos.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+            )}
 
-      {curso.modulos?.length > 0 && (
-        <section className="mt-4">
-          <h2>Conteúdo do curso</h2>
-          {curso.modulos.map((modulo, idx) => (
-            <div key={idx} className="modulo mb-3">
-              <button
-                className="btn btn-outline-secondary w-100 text-start"
-                onClick={() => toggleModulo(idx)}
-              >
-                {modulo.Titulo}
-              </button>
-              {modulosAbertos.includes(idx) && (
-                <ul className="mt-2 ms-3">
-                  {modulo.aulas?.map((aula, i) => (
-                    <li key={i} className="mb-2">
-                      <strong>{aula.Titulo}</strong>: {aula.Descricao}
-                      {aula.conteudos?.length > 0 && (
-                        <div className="mt-1 ms-3">
-                          <strong>Anexos:</strong>
-                          <ul className="mt-1 ms-3">
-                            {aula.conteudos.map((file, fIdx) => (
-                              <li key={fIdx}>
-                                <a
+            {curso.Includes?.length > 0 && (
+                <div className="curso-info">
+                  <h2><i className="fas fa-check-circle"></i> Inclui</h2>
+                  <ul>
+                    {curso.Includes.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+            )}
+
+      
+            {curso.modulos?.length > 0 && (
+                <div className="curso-info">
+                  <h2><i className="fas fa-book"></i> Conteúdo do curso</h2>
+                  {curso.modulos.map((modulo, idx) => (
+                      <div key={idx} className="modulo">
+                        <button className="modulo-btn" onClick={() => toggleModulo(idx)}>
+                          {modulo.Titulo}
+                          <i className={`fas ${modulosAbertos.includes(idx) ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                        </button>
+
+                        {modulosAbertos.includes(idx) && (
+                            <div className="modulo-conteudo">
+                              {modulo.aulas?.map((aula, i) => (
+                                  <div key={i} className="aula">
+                                    <strong>{aula.Titulo}</strong>: {aula.Descricao}
+                                    {aula.conteudos?.length > 0 && (
+                                        <div className="anexos">
+                                          <strong>Anexos:</strong>
+                                          <ul>
+                                            {aula.conteudos.map((file, fIdx) => (
+                                                <li key={fIdx}>
+                                                  <a
                                   href={`https://backend-4tkw.onrender.com${file.URL}`}
                                   target="_blank"
                                   rel="noreferrer"
                                   download={file.Nome_Original}
                                 >
-                                  {file.Nome_Original}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </li>
+                                  <i className="fas fa-file-download"></i> {file.Nome_Original}
+                                                  </a>
+                                                </li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                    )}
+                                  </div>
+                              ))}
+                            </div>
+                        )}
+                      </div>
                   ))}
-                </ul>
-              )}
-            </div>
-          ))}
-        </section>
-      )}
-    </div>
+                </div>
+            )}
+          </div>
+        </div>
+      </div>
   );
 };
 
