@@ -118,7 +118,7 @@ const DashboardGestor = () => {
             </div>
             <div className="stat-content">
               <h3>{stats.totalUtilizadores || 0}</h3>
-              <p>Total de Utilizadores</p>
+              <p>Total de formandos</p>
             </div>
           </div>
 
@@ -138,7 +138,7 @@ const DashboardGestor = () => {
             </div>
             <div className="stat-content">
               <h3>{stats.novosUtilizadores || 0}</h3>
-              <p>Novos Utilizadores (Mês)</p>
+              <p>Novos formandos (Mês)</p>
             </div>
           </div>
 
@@ -148,7 +148,7 @@ const DashboardGestor = () => {
             </div>
             <div className="stat-content">
               <h3>{stats.utilizadoresAtivos || 0}</h3>
-              <p>Utilizadores Ativos</p>
+              <p>Formandos Ativos</p>
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ const DashboardGestor = () => {
 
         <div className="chart-wrapper">
             <div className="chart-header">
-              <h2>Estatísticas de Utilizadores</h2>
+              <h2>Estatísticas dos Formandos</h2>
               <div className="chart-actions">
                 <Link to="/gestor/gerir-utilizadores" className="btn btn-outline">
                   <i className="fas fa-user-cog"></i> Gerir Utilizadores
