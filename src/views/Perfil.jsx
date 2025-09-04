@@ -112,10 +112,7 @@ const Perfil = () => {
                                         <div className="stat-value">{stats.averageProgress}%</div>
                                         <div className="stat-label">Progresso Médio</div>
                                     </Col>
-                                    <Col md={4} className="stat-item">
-                                        <div className="stat-value">{stats.hoursTrained}</div>
-                                        <div className="stat-label">Horas de Formação</div>
-                                    </Col>
+                                    
                                 </Row>
                             )}
                         </Card.Body>
