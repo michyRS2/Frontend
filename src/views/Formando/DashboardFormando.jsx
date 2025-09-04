@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import formandoService from "../../services/formandoService";
 import CursoCard from "../../components/CursoCard";
 import ForumCard from "../../components/ForumCard";
@@ -15,6 +15,8 @@ const DashboardFormando = () => {
 
   // mapa ID_Curso -> total de quizzes
   const [quizCounts, setQuizCounts] = useState({});
+  // mapa ID_Curso -> progresso médio dos quizzes
+  const [quizProgress, setQuizProgress] = useState({});
 
   // 1) Buscar dados do dashboard
   useEffect(() => {
@@ -38,9 +40,7 @@ const DashboardFormando = () => {
 
     const ids = new Set();
     (dashboardData.cursosInscritos || []).forEach((c) => ids.add(c.ID_Curso));
-    (dashboardData.cursosRecomendados || []).forEach((c) =>
-      ids.add(c.ID_Curso)
-    );
+    (dashboardData.cursosRecomendados || []).forEach((c) => ids.add(c.ID_Curso));
 
     if (ids.size === 0) return;
 
@@ -50,20 +50,39 @@ const DashboardFormando = () => {
         const pairs = await Promise.all(
           Array.from(ids).map(async (id) => {
             try {
-              const r = await fetch(`${API}/api/curso/${id}/quizzes/count`, {
+              // Contagem de quizzes
+              const rCount = await fetch(`${API}/api/curso/${id}/quizzes/count`, {
                 credentials: "include",
               });
-              if (!r.ok) return [id, 0];
-              const { total } = await r.json();
-              return [id, Number(total) || 0];
+              const countData = rCount.ok ? await rCount.json() : { total: 0 };
+              const totalQuizzes = Number(countData.total) || 0;
+
+              // Progresso médio dos quizzes
+              const rProg = await fetch(`${API}/api/curso/${id}/quizzes/progresso`, {
+                credentials: "include",
+              });
+              const progData = rProg.ok ? await rProg.json() : { progressoMedio: 0 };
+              const progressoMedio = Number(progData.progressoMedio) || 0;
+
+              return [id, { totalQuizzes, progressoMedio }];
             } catch {
-              return [id, 0];
+              return [id, { totalQuizzes: 0, progressoMedio: 0 }];
             }
           })
         );
-        if (alive) setQuizCounts(Object.fromEntries(pairs));
+
+        if (alive) {
+          const counts = {};
+          const progress = {};
+          pairs.forEach(([id, { totalQuizzes, progressoMedio }]) => {
+            counts[id] = totalQuizzes;
+            progress[id] = progressoMedio;
+          });
+          setQuizCounts(counts);
+          setQuizProgress(progress);
+        }
       } catch (e) {
-        console.error("Erro ao obter contagem de quizzes:", e);
+        console.error("Erro ao obter dados dos quizzes:", e);
       }
     })();
 
@@ -93,13 +112,14 @@ const DashboardFormando = () => {
   // Calcular estatísticas para exibir
   const totalCursos = cursosInscritos ? cursosInscritos.length : 0;
   const cursosConcluidos = cursosInscritos
-    ? cursosInscritos.filter((curso) => curso.Progresso === 100).length
+    ? cursosInscritos.filter((curso) => (quizProgress[curso.ID_Curso] || 0) === 100).length
     : 0;
+
   const progressoMedio =
     cursosInscritos && cursosInscritos.length > 0
       ? Math.round(
           cursosInscritos.reduce(
-            (acc, curso) => acc + (curso.Progresso || 0),
+            (acc, curso) => acc + (quizProgress[curso.ID_Curso] || 0),
             0
           ) / cursosInscritos.length
         )
@@ -176,8 +196,7 @@ const DashboardFormando = () => {
 
                     {/* badge com nº de quizzes */}
                     <div className="text-center mt-2 small text-muted">
-                      Quizzes:{" "}
-                      <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+                      Quizzes: <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
                     </div>
                   </div>
                 ))}
@@ -204,8 +223,7 @@ const DashboardFormando = () => {
 
                     {/* badge com nº de quizzes */}
                     <div className="text-center mt-2 small text-muted">
-                      Quizzes:{" "}
-                      <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+                      Quizzes: <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
                     </div>
                   </div>
                 ))}
@@ -215,23 +233,22 @@ const DashboardFormando = () => {
 
         {/* Percurso Formativo */}
         {percursoFormativo && percursoFormativo.length > 0 && (
-  <section className="mt-5 carousel-section">
-    <div className="section-header">
-      <h2>Percurso Formativo</h2>
-      <p>O seu plano de aprendizagem personalizado</p>
-    </div>
-    <div className="carousel-container">
-      <div className="scroll-carousel">
-        {percursoFormativo.map((etapa) => (
-          <div key={etapa.ID_Etapa} className="carousel-item-card">
-            <PercursoCard curso={etapa} />
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
-
+          <section className="mt-5 carousel-section">
+            <div className="section-header">
+              <h2>Percurso Formativo</h2>
+              <p>O seu plano de aprendizagem personalizado</p>
+            </div>
+            <div className="carousel-container">
+              <div className="scroll-carousel">
+                {percursoFormativo.map((etapa) => (
+                  <div key={etapa.ID_Etapa} className="carousel-item-card">
+                    <PercursoCard curso={etapa} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Últimos Tópicos do Fórum */}
         <section className="mt-5 carousel-section">
