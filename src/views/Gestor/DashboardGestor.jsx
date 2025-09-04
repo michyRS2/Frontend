@@ -127,8 +127,8 @@ const DashboardGestor = () => {
               <i className="fas fa-book"></i>
             </div>
             <div className="stat-content">
-              <h3>{stats.totalCursos || 0}</h3>
-              <p>Total de Cursos</p>
+              <h3>{stats.totalCursos ?? cursos.length}</h3>
+            <p>Total de Cursos</p>
             </div>
           </div>
 
