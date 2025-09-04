@@ -10,48 +10,46 @@ const Perfil = () => {
         averageProgress: 0,
         hoursTrained: 0
     });
-    const [passwordForm, setPasswordForm] = useState({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-    });
-    const [passwordError, setPasswordError] = useState('');
-    const [passwordSuccess, setPasswordSuccess] = useState('');
     const [loadingStats, setLoadingStats] = useState(true);
     const [error, setError] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordSuccess, setPasswordSuccess] = useState('');
 
-    // Buscar estatísticas do perfil
     useEffect(() => {
         const fetchStats = async () => {
             try {
                 setLoadingStats(true);
                 setError('');
 
-                // Obter dados do dashboard para calcular estatísticas
+                // Obter dados do dashboard
                 const dashboardResponse = await api.get('/formando/dashboard');
                 const dashboardData = dashboardResponse.data;
-
+                const cursosInscritos = dashboardData.cursosInscritos || [];
                 setUserEmail(dashboardData.Email || '');
 
-                const cursosInscritos = dashboardData.cursosInscritos || [];
-
-                // calcular cursos concluídos
-                const completedCourses = cursosInscritos.filter(curso => {
-                    const progresso = curso.quizProgress ?? 0;
-                    return progresso === 100;
-                }).length;
-
-                // calcular progresso médio ponderado
                 let totalPercent = 0;
-                let totalQuizzes = 0;
-                cursosInscritos.forEach(curso => {
-                    const quizzesCount = curso.quizCounts ?? 0;
-                    const progresso = curso.quizProgress ?? 0;
-                    totalPercent += progresso * quizzesCount;
-                    totalQuizzes += quizzesCount;
-                });
-                const averageProgress = totalQuizzes > 0 ? Math.round(totalPercent / totalQuizzes) : 0;
+                let totalQuizzesCount = 0;
+                let completedCourses = 0;
+
+                // Buscar progresso de cada curso
+                await Promise.all(cursosInscritos.map(async (curso) => {
+                    try {
+                        const r = await api.get(`/api/curso/${curso.ID_Curso}/quizzes/progresso`);
+                        const data = r.data;
+                        const progressoMedio = Number(data.mediaPercent ?? 0);
+                        const totalQuizzes = data.total ?? 0;
+
+                        totalPercent += progressoMedio * totalQuizzes;
+                        totalQuizzesCount += totalQuizzes;
+
+                        if (progressoMedio === 100) completedCourses += 1;
+                    } catch {
+                        // ignorar erro individual
+                    }
+                }));
+
+                const averageProgress = totalQuizzesCount > 0 ? Math.round(totalPercent / totalQuizzesCount) : 0;
 
                 setStats({
                     completedCourses,
@@ -62,13 +60,7 @@ const Perfil = () => {
                 setLoadingStats(false);
             } catch (err) {
                 console.error('Erro ao carregar estatísticas:', err);
-
-                if (err.response?.status === 401) {
-                    setError('A sua sessão expirou. Por favor, faça login novamente.');
-                } else {
-                    setError('Erro ao carregar estatísticas do perfil');
-                }
-
+                setError('Erro ao carregar estatísticas do perfil');
                 setLoadingStats(false);
             }
         };
