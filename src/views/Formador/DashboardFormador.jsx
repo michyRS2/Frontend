@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../axiosConfig";
 import { useNavigate } from "react-router-dom";
+import "../../styles/dashboardFormador.css";
 
 
 const norm = (s) =>
@@ -19,6 +20,8 @@ const DashboardFormador = () => {
   const [areaSelecionada, setAreaSelecionada] = useState("");
   const [topicoSelecionado, setTopicoSelecionado] = useState("");
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // contagem de quizzes por curso
   const [quizCounts, setQuizCounts] = useState({}); // { [ID_Curso]: number }
@@ -93,164 +96,206 @@ const DashboardFormador = () => {
   const handleGerirConteudo = (id) => navigate(`/formador/editar-curso/${id}`);
   const handleNovoQuiz = (id) => navigate(`/formador/cursos/${id}/novo-quiz`);
 
-  return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard do Formador</h1>
 
-      <div className="mb-3">
-        <button
-          className="btn btn-outline-dark"
-          onClick={() => setMostrarFiltros(!mostrarFiltros)}
-        >
-          {mostrarFiltros ? "Ocultar Filtros" : "Mostrar Filtros"}
-        </button>
+  if (loading) return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Carregando os seus cursos...</p>
       </div>
+  );
 
-      {mostrarFiltros && (
-        <div className="card card-body mb-4">
-          <h6>Categorias:</h6>
-          <div className="d-flex flex-wrap gap-2 mb-3">
-            <button
-              className={`btn ${categoriaSelecionada === "" ? "btn-primary" : "btn-outline-primary"}`}
-              onClick={() => {
-                setCategoriaSelecionada("");
-                setAreaSelecionada("");
-                setTopicoSelecionado("");
-              }}
-            >
-              Todas
-            </button>
-            {categoriasUnicas.map((cat) => (
-              <button
-                key={cat}
-                className={`btn ${categoriaSelecionada === cat ? "btn-primary" : "btn-outline-primary"}`}
-                onClick={() => {
-                  setCategoriaSelecionada(cat);
-                  setAreaSelecionada("");
-                  setTopicoSelecionado("");
-                }}
-              >
-                {cat}
-              </button>
-            ))}
+  if (error) return (
+      <div className="error-container">
+        <p>{error}</p>
+      </div>
+  );
+
+  return (
+      <div className="dashboard-container">
+        {/* Header */}
+        <div className="dashboard-header">
+          <h1>Dashboard do Formador</h1>
+          <p>Gerencie os seus cursos e conteúdos</p>
+        </div>
+
+        {/* Filtros */}
+        <div className="filtros-section">
+          <div className="section-header">
+            <h2><i className="fas fa-filter"></i> Filtros</h2>
+            <p className="section-description">Filtre os seus cursos por categoria, área ou tópico</p>
           </div>
 
-          <h6>Áreas:</h6>
-          <div className="d-flex flex-wrap gap-2 mb-3">
+          <div className="filtros-container">
             <button
-              className={`btn ${areaSelecionada === "" ? "btn-secondary" : "btn-outline-secondary"}`}
-              onClick={() => setAreaSelecionada("")}
-              disabled={!categoriaSelecionada}
+                className="btn-toggle-filtros"
+                onClick={() => setMostrarFiltros(!mostrarFiltros)}
             >
-              Todas
+              <i className={`fas ${mostrarFiltros ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+              {mostrarFiltros ? "Ocultar Filtros" : "Mostrar Filtros"}
             </button>
-            {areasUnicas.map((ar) => (
-              <button
-                key={ar}
-                className={`btn ${areaSelecionada === ar ? "btn-secondary" : "btn-outline-secondary"}`}
-                onClick={() => {
-                  setAreaSelecionada(ar);
-                  setTopicoSelecionado("");
-                }}
-                disabled={!categoriaSelecionada}
-              >
-                {ar}
-              </button>
-            ))}
-          </div>
 
-          <h6>Tópicos:</h6>
-          <div className="d-flex flex-wrap gap-2">
-            <button
-              className={`btn ${topicoSelecionado === "" ? "btn-success" : "btn-outline-success"}`}
-              onClick={() => setTopicoSelecionado("")}
-              disabled={!areaSelecionada}
-            >
-              Todos
-            </button>
-            {topicosUnicos.map((tp) => (
-              <button
-                key={tp}
-                className={`btn ${topicoSelecionado === tp ? "btn-success" : "btn-outline-success"}`}
-                onClick={() => setTopicoSelecionado(tp)}
-                disabled={!areaSelecionada}
-              >
-                {tp}
-              </button>
-            ))}
+            {mostrarFiltros && (
+                <div className="filtros-content">
+                  <div className="filtro-group">
+                    <h6>Categorias:</h6>
+                    <div className="filtro-buttons">
+                      <button
+                          className={`filtro-btn ${categoriaSelecionada === "" ? "active" : ""}`}
+                          onClick={() => {
+                            setCategoriaSelecionada("");
+                            setAreaSelecionada("");
+                            setTopicoSelecionado("");
+                          }}
+                      >
+                        Todas
+                      </button>
+                      {categoriasUnicas.map((cat) => (
+                          <button
+                              key={cat}
+                              className={`filtro-btn ${categoriaSelecionada === cat ? "active" : ""}`}
+                              onClick={() => {
+                                setCategoriaSelecionada(cat);
+                                setAreaSelecionada("");
+                                setTopicoSelecionado("");
+                              }}
+                          >
+                            {cat}
+                          </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="filtro-group">
+                    <h6>Áreas:</h6>
+                    <div className="filtro-buttons">
+                      <button
+                          className={`filtro-btn ${areaSelecionada === "" ? "active" : ""} ${!categoriaSelecionada ? "disabled" : ""}`}
+                          onClick={() => setAreaSelecionada("")}
+                          disabled={!categoriaSelecionada}
+                      >
+                        Todas
+                      </button>
+                      {areasUnicas.map((ar) => (
+                          <button
+                              key={ar}
+                              className={`filtro-btn ${areaSelecionada === ar ? "active" : ""} ${!categoriaSelecionada ? "disabled" : ""}`}
+                              onClick={() => {
+                                setAreaSelecionada(ar);
+                                setTopicoSelecionado("");
+                              }}
+                              disabled={!categoriaSelecionada}
+                          >
+                            {ar}
+                          </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="filtro-group">
+                    <h6>Tópicos:</h6>
+                    <div className="filtro-buttons">
+                      <button
+                          className={`filtro-btn ${topicoSelecionado === "" ? "active" : ""} ${!areaSelecionada ? "disabled" : ""}`}
+                          onClick={() => setTopicoSelecionado("")}
+                          disabled={!areaSelecionada}
+                      >
+                        Todos
+                      </button>
+                      {topicosUnicos.map((tp) => (
+                          <button
+                              key={tp}
+                              className={`filtro-btn ${topicoSelecionado === tp ? "active" : ""} ${!areaSelecionada ? "disabled" : ""}`}
+                              onClick={() => setTopicoSelecionado(tp)}
+                              disabled={!areaSelecionada}
+                          >
+                            {tp}
+                          </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+            )}
           </div>
         </div>
-      )}
 
-      <div className="table-responsive">
-        <table className="table table-bordered table-hover align-middle mb-0">
-          <thead className="table-dark text-center">
-            <tr>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Área</th>
-              <th>Tópico</th>
-              <th>Data Início</th>
-              <th>Data Fim</th>
-              <th>Estado</th>
-              <th>Quizzes</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody className="text-center">
-            {cursosFiltrados.length === 0 ? (
+        {/* Tabela de Cursos */}
+        <div className="cursos-section">
+          <div className="section-header">
+            <h2><i className="fas fa-graduation-cap"></i> Meus Cursos</h2>
+            <p className="section-description">{cursosFiltrados.length} curso(s) encontrado(s)</p>
+          </div>
+
+          <div className="table-container">
+            <table className="cursos-table">
+              <thead>
               <tr>
-                <td colSpan="9">Nenhum curso encontrado.</td>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Área</th>
+                <th>Tópico</th>
+                <th>Data Início</th>
+                <th>Data Fim</th>
+                <th>Estado</th>
+                <th>Quizzes</th>
+                <th>Ações</th>
               </tr>
-            ) : (
-              cursosFiltrados.map((curso) => {
-                const quizzesCount =
-                  Number(curso.Num_Quizzes ?? curso.num_quizzes ?? curso.quizzesCount) ||
-                  quizCounts[curso.ID_Curso] ||
-                  0;
-
-                return (
-                  <tr key={curso.ID_Curso}>
-                    <td>{curso.Nome_Curso}</td>
-                    <td>{curso.Categoria || "—"}</td>
-                    <td>{curso.Area || "—"}</td>
-                    <td>{curso.Topico || "—"}</td>
-                    <td>{new Date(curso.Data_Inicio).toLocaleDateString("pt-PT")}</td>
-                    <td>{new Date(curso.Data_Fim).toLocaleDateString("pt-PT")}</td>
-                    <td>{curso.Estado_Curso}</td>
-
-                    {/* Nº de quizzes */}
-                    <td>{quizzesCount}</td>
-
-                    <td>
-                      <div className="d-flex gap-2 justify-content-center">
-                        <button
-                          onClick={() => handleGerirConteudo(curso.ID_Curso)}
-                          className="btn btn-outline-primary btn-sm"
-                          title="Gerir Conteúdo"
-                        >
-                          Gerir Conteúdo
-                        </button>
-
-                        {isSincrono(curso.Tipo_Curso) && (
-                          <button
-                            onClick={() => handleNovoQuiz(curso.ID_Curso)}
-                            className="btn btn-outline-success btn-sm"
-                            title="Criar novo quiz para este curso"
-                          >
-                            + Quiz
-                          </button>
-                        )}
-                      </div>
-                    </td>
+              </thead>
+              <tbody>
+              {cursosFiltrados.length === 0 ? (
+                  <tr>
+                    <td colSpan="9" className="empty-table">Nenhum curso encontrado.</td>
                   </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
+              ) : (
+                  cursosFiltrados.map((curso) => {
+                    const quizzesCount =
+                        Number(curso.Num_Quizzes ?? curso.num_quizzes ?? curso.quizzesCount) ||
+                        quizCounts[curso.ID_Curso] ||
+                        0;
+
+                    return (
+                        <tr key={curso.ID_Curso}>
+                          <td>{curso.Nome_Curso}</td>
+                          <td>{curso.Categoria || "—"}</td>
+                          <td>{curso.Area || "—"}</td>
+                          <td>{curso.Topico || "—"}</td>
+                          <td>{new Date(curso.Data_Inicio).toLocaleDateString("pt-PT")}</td>
+                          <td>{new Date(curso.Data_Fim).toLocaleDateString("pt-PT")}</td>
+                          <td>
+                        <span className={`status-badge ${curso.Estado_Curso === 'Ativo' ? 'status-active' : 'status-pending'}`}>
+                          {curso.Estado_Curso}
+                        </span>
+                          </td>
+                          <td>{quizzesCount}</td>
+                          <td>
+                            <div className="table-actions">
+                              <button
+                                  onClick={() => handleGerirConteudo(curso.ID_Curso)}
+                                  className="btn-action primary"
+                                  title="Gerir Conteúdo"
+                              >
+                                <i className="fas fa-cog"></i> Gerir
+                              </button>
+
+                              {isSincrono(curso.Tipo_Curso) && (
+                                  <button
+                                      onClick={() => handleNovoQuiz(curso.ID_Curso)}
+                                      className="btn-action secondary"
+                                      title="Criar novo quiz para este curso"
+                                  >
+                                    <i className="fas fa-plus"></i> Quiz
+                                  </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                    );
+                  })
+              )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
   );
 };
 

@@ -1,0 +1,288 @@
+/* Adicione estas regras ao seu CSS existente */
+
+.filtros-section {
+    background: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: var(--spacing-section);
+    border: none;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+.filtros-section:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.filtros-container {
+    margin-top: 1.5rem;
+}
+
+.btn-toggle-filtros {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-toggle-filtros:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.filtros-content {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-card-border);
+}
+
+.filtro-group {
+    margin-bottom: 1.5rem;
+}
+
+.filtro-group h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-heading);
+    margin-bottom: 0.75rem;
+}
+
+.filtro-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filtro-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--color-primary);
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filtro-btn:hover:not(.disabled) {
+    background: rgba(44, 111, 209, 0.1);
+}
+
+.filtro-btn.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.filtro-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cursos-section {
+    background: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: var(--spacing-section);
+    border: none;
+    box-shadow: var(--card-shadow);
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+}
+
+.cursos-section:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 1.5rem;
+}
+
+.cursos-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.cursos-table th {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.cursos-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-card-border);
+}
+
+.cursos-table tr:last-child td {
+    border-bottom: none;
+}
+
+.cursos-table tr:hover {
+    background: rgba(44, 111, 209, 0.05);
+}
+
+.empty-table {
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: 2rem !important;
+    font-style: italic;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+.status-active {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+}
+
+.status-pending {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #ffc107;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--border-radius);
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-action.primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.btn-action.primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-action.secondary {
+    background: var(--color-secondary);
+    color: white;
+}
+
+.btn-action.secondary:hover {
+    background: #e55a2b;
+    transform: translateY(-2px);
+}
+
+/* Loading e Error States */
+.loading-container, .error-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    text-align: center;
+    background: var(--color-card-bg);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    border: none;
+    box-shadow: var(--card-shadow);
+}
+
+.loading-container {
+    background: var(--color-bg);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.error-container p {
+    color: #dc3545;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .cursos-table {
+        min-width: 800px;
+    }
+
+    .table-actions {
+        flex-direction: column;
+    }
+
+    .filtro-buttons {
+        justify-content: center;
+    }
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    .filtro-btn {
+        border-color: var(--color-primary-light);
+        color: var(--color-primary-light);
+    }
+
+    .filtro-btn:hover:not(.disabled) {
+        background: rgba(59, 130, 246, 0.1);
+    }
+
+    .filtro-btn.active {
+        background: var(--color-primary-light);
+        color: white;
+    }
+
+    .cursos-table tr:hover {
+        background: rgba(59, 130, 246, 0.05);
+    }
+
+    .loading-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-top: 4px solid var(--color-primary);
+    }
+}
