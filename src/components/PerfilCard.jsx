@@ -178,26 +178,7 @@ const PerfilCard = () => {
                         )}
                     </div>
 
-                    <div className="Perfil-actions">
-                        {editMode ? (
-                            <>
-                                <Button variant="success" onClick={handleSubmit} className="me-2">
-                                    <FaSave className="me-1" /> Guardar
-                                </Button>
-                                <Button variant="secondary" onClick={() => {
-                                    setEditMode(false);
-                                    setPreviewImage(null);
-                                    setProfileImageFile(null);
-                                }}>
-                                    <FaTimes className="me-1" /> Cancelar
-                                </Button>
-                            </>
-                        ) : (
-                            <Button variant="primary" onClick={() => setEditMode(true)}>
-                                <FaUserEdit className="me-1" /> Editar Perfil
-                            </Button>
-                        )}
-                    </div>
+                    
                 </div>
 
                 {editMode ? (
