@@ -117,7 +117,7 @@ const Perfil = () => {
                                         <div className="stat-label">Progresso Médio</div>
                                     </Col>
                                     <Col md={4} className="stat-item">
-                                        <div className="stat-value">{stats.totalCursos}%</div>
+                                        <div className="stat-value">{stats.totalCursos}</div>
                                         <div className="stat-label">Cursos Inscritos</div>
                                     </Col>
                                     
