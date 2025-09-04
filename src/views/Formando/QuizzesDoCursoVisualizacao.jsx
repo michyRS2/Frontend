@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, ProgressBar, Container, Row, Col } from "react-bootstrap";
+import { Card, ProgressBar, Container, Row, Col, Badge } from "react-bootstrap";
 
 const API = "https://backend-4tkw.onrender.com";
 
@@ -14,7 +14,7 @@ function authHeaders(extra = {}) {
 }
 
 export default function QuizzesDoCursoVisualizacao() {
-  const { id } = useParams(); // ID_Curso
+  const { id } = useParams();
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
@@ -53,6 +53,14 @@ export default function QuizzesDoCursoVisualizacao() {
   if (erro) return <p className="container py-3 text-danger">{erro}</p>;
   if (!quizzes.length) return <p className="container py-3">Este curso ainda não tem quizzes.</p>;
 
+  // Função para cor da progress bar
+  const getProgressVariant = (percent) => {
+    if (percent == null) return "secondary";
+    if (percent < 50) return "danger";
+    if (percent < 80) return "warning";
+    return "success";
+  };
+
   return (
     <Container className="py-3">
       <h2 className="mb-3">Quizzes Concluídos do Curso #{id}</h2>
@@ -63,27 +71,32 @@ export default function QuizzesDoCursoVisualizacao() {
       <Row xs={1} md={2} lg={3} className="g-3">
         {quizzes.map((q) => (
           <Col key={q.ID_Quiz}>
-            <Card>
-              <Card.Body>
-                <Card.Title>{q.Titulo}</Card.Title>
-                {q.feito ? (
-                  <>
-                    <div className="mb-2">
-                      <span className="badge bg-success me-2">Feito</span>
-                      {q.ultimaData && (
-                        <span className="text-muted">
-                          ({new Date(q.ultimaData).toLocaleDateString("pt-PT")})
-                        </span>
-                      )}
-                    </div>
-                    <ProgressBar
-                      now={q.ultimaPercent || 0}
-                      label={`${q.ultimaPercent || 0}%`}
-                    />
-                  </>
-                ) : (
-                  <span className="badge bg-secondary">Por fazer</span>
-                )}
+            <Card className="shadow-sm h-100">
+              <Card.Body className="d-flex flex-column justify-content-between">
+                <div>
+                  <Card.Title>{q.Titulo}</Card.Title>
+                  {q.feito ? (
+                    <>
+                      <div className="mb-2">
+                        <Badge bg="success" className="me-2">Feito</Badge>
+                        {q.ultimaData && (
+                          <span className="text-muted">
+                            ({new Date(q.ultimaData).toLocaleDateString("pt-PT")})
+                          </span>
+                        )}
+                      </div>
+                      <ProgressBar
+                        now={q.ultimaPercent || 0}
+                        label={`${q.ultimaPercent || 0}%`}
+                        variant={getProgressVariant(q.ultimaPercent)}
+                        animated
+                        striped
+                      />
+                    </>
+                  ) : (
+                    <Badge bg="secondary">Por fazer</Badge>
+                  )}
+                </div>
               </Card.Body>
             </Card>
           </Col>
