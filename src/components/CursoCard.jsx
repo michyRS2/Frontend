@@ -18,11 +18,9 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
       ? curso.Formador
       : curso.Formador?.Nome || curso.Formador || "Não especificado";
 
-  const minhaAvaliacao = curso.Minha_Avaliacao ?? curso.minhaAvaliacao ?? null;
-
+  const rating = Number(curso.Rating ?? curso.rating ?? 0); // média do curso 0-5
   const numAval = Number(curso.Numero_Avaliacoes ?? curso.numeroAvaliacoes ?? 0);
-  const ratingTotal = Number(curso.Rating ?? curso.rating ?? 0);
-  const rating = numAval > 0 ? ratingTotal / numAval : 0; // média de 0 a 5
+  const minhaAvaliacao = curso.Minha_Avaliacao ?? curso.minhaAvaliacao ?? null;
 
   // buscar nº de quizzes
   useEffect(() => {
@@ -76,7 +74,7 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
   }
 
   // estrelas interativas
-  const displayed = hover ?? (minhaAvaliacao != null ? minhaAvaliacao : 0);
+  const displayed = hover ?? (minhaAvaliacao ?? 0);
   const renderStars = () => (
     <div style={{ display: "inline-flex", gap: 4 }}>
       {[1, 2, 3, 4, 5].map((i) => (
@@ -88,18 +86,14 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
           onMouseEnter={() => setHover(i)}
           onMouseLeave={() => setHover(null)}
           onClick={() => {
-            if (minhaAvaliacao === i) {
-              handleRate(0); // cancelar avaliação
-            } else {
-              handleRate(i);
-            }
+            if (minhaAvaliacao === i) handleRate(0); // cancelar avaliação
+            else handleRate(i);
           }}
         />
       ))}
     </div>
   );
 
-  // rota de detalhes
   const handleVerDetalhes = () => {
     const rota = curso.inscrito
       ? `/cursosInscritos/${curso.ID_Curso}`
@@ -107,7 +101,6 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
     navigate(rota);
   };
 
-  // rota da lista de quizzes
   const handleAbrirQuiz = () => {
     navigate(`/quiz/curso/${curso.ID_Curso}`);
   };
@@ -127,8 +120,13 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
 
           {!hideRatings && (
             <Card.Text>
-              {renderStars()}
+              {/* Tuas estrelas */}
+              <strong>A minha avaliação:</strong> {renderStars()}
+              <div style={{ fontSize: 12, marginTop: 4 }}>
+                {minhaAvaliacao != null ? `Deu ${minhaAvaliacao} ⭐` : "Ainda não avaliou"}
+              </div>
 
+              {/* Média do curso */}
               <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
                 <strong>Média do curso:</strong> {rating.toFixed(2)} ({numAval} avaliações)
               </div>
