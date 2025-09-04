@@ -48,28 +48,25 @@ const DashboardFormando = () => {
     (async () => {
       try {
         const pairs = await Promise.all(
-          Array.from(ids).map(async (id) => {
-            try {
-              // Contagem de quizzes
-              const rCount = await fetch(`${API}/api/curso/${id}/quizzes/count`, {
-                credentials: "include",
-              });
-              const countData = rCount.ok ? await rCount.json() : { total: 0 };
-              const totalQuizzes = Number(countData.total) || 0;
+  Array.from(ids).map(async (id) => {
+    try {
+      const r = await fetch(`${API}/api/curso/${id}/quizzes`, {
+        credentials: "include",
+      });
+      if (!r.ok) return [id, { totalQuizzes: 0, progressoMedio: 0 }];
+      const data = await r.json();
 
-              // Progresso médio dos quizzes
-              const rProg = await fetch(`${API}/api/curso/${id}/quizzes/progresso`, {
-                credentials: "include",
-              });
-              const progData = rProg.ok ? await rProg.json() : { progressoMedio: 0 };
-              const progressoMedio = Number(progData.progressoMedio) || 0;
+      // data.mediaPercent já é a média do progresso
+      const progressoMedio = Number(data.mediaPercent || 0);
+      const totalQuizzes = Array.isArray(data.quizzes) ? data.quizzes.length : 0;
 
-              return [id, { totalQuizzes, progressoMedio }];
-            } catch {
-              return [id, { totalQuizzes: 0, progressoMedio: 0 }];
-            }
-          })
-        );
+      return [id, { totalQuizzes, progressoMedio }];
+    } catch {
+      return [id, { totalQuizzes: 0, progressoMedio: 0 }];
+    }
+  })
+);
+
 
         if (alive) {
           const counts = {};
