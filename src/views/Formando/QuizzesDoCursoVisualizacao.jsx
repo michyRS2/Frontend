@@ -58,12 +58,12 @@ export default function QuizzesDoCursoVisualizacao() {
   if (!quizzes.length)
     return <p className="container py-3">Este curso ainda não tem quizzes.</p>;
 
-  // Função para cor da progress bar
-  const getProgressVariant = (percent) => {
-    if (percent == null) return "secondary";
-    if (percent < 50) return "danger";
-    if (percent < 80) return "warning";
-    return "success";
+  // Função para cor da barra de progresso
+  const getProgressColor = (percent) => {
+    if (percent == null) return "#6c757d"; // cinza
+    if (percent < 50) return "#dc3545"; // vermelho
+    if (percent < 80) return "#ffc107"; // amarelo
+    return "#198754"; // verde
   };
 
   return (
@@ -97,30 +97,32 @@ export default function QuizzesDoCursoVisualizacao() {
                           </span>
                         )}
                       </div>
+
                       <ProgressBar
-  now={q.ultimaPercent || 0}
-  label={`${q.ultimaPercent || 0}%`}
-  style={{
-    backgroundColor: '#e9ecef',
-    height: '1.5rem',
-  }}
-  className="mb-2"
->
-  <ProgressBar
-    now={q.ultimaPercent || 0}
-    label={`${q.ultimaPercent || 0}%`}
-    style={{
-      backgroundColor:
-        q.ultimaPercent < 50
-          ? '#dc3545' // vermelho
-          : q.ultimaPercent < 80
-          ? '#ffc107' // amarelo
-          : '#198754', // verde
-    }}
-  />
-</ProgressBar>
-
-
+                        now={q.ultimaPercent || 0}
+                        label={`${q.ultimaPercent || 0}%`}
+                        style={{
+                          height: "1.5rem",
+                          backgroundColor: "#e9ecef",
+                          color: "#000",
+                          width: "100%",
+                        }}
+                        className="mb-2"
+                      >
+                        <div
+                          style={{
+                            width: `${q.ultimaPercent || 0}%`,
+                            height: "100%",
+                            backgroundColor: getProgressColor(q.ultimaPercent),
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {`${q.ultimaPercent || 0}%`}
+                        </div>
+                      </ProgressBar>
                     </>
                   ) : (
                     <Badge bg="secondary">Por fazer</Badge>
