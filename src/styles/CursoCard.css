@@ -1,67 +1,299 @@
-.CursoCard-wrapper .card {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 1rem;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    overflow: hidden;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.CursoCard-wrapper {
+    perspective: 1000px;
 }
 
+.CursoCard-wrapper .card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(44, 111, 209, 0.1);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+    height: 100%;
+    position: relative;
+    transform: translateZ(0); /* Aceleração por hardware */
+}
+
+.CursoCard-wrapper .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2c6fd1, #1a56b6, #ff6b35);
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+}
 
 .CursoCard-wrapper .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    transform: translateY(-12px) rotateX(2deg);
+    box-shadow: 0 20px 40px rgba(44, 111, 209, 0.2);
+    border-color: #5c9ce6;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.CursoCard-wrapper .card:hover::before {
+    opacity: 1;
+    transition: opacity 0.6s ease-out;
 }
 
 /* Imagem como fundo com efeito glass */
 .CursoCard-wrapper .card-img-top {
     position: relative;
-    height: 180px; /* Corrige o bug da imagem gigante */
+    height: 180px;
     background-size: cover;
     background-position: center;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
     overflow: hidden;
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    transform: translateZ(0); /* Aceleração por hardware */
 }
 
+.CursoCard-wrapper .card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.CursoCard-wrapper .card-img-overlay {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.25rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.CursoCard-wrapper .card:hover .card-img-overlay {
+    opacity: 1;
+}
 
 .CursoCard-wrapper .card-body {
-    padding: 1rem;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.4); /* Contraste com o fundo vítreo */
+    padding: 1.5rem;
+    color: #2d3748;
+    transition: background-color 0.4s ease-out;
+}
+
+.CursoCard-wrapper .card:hover .card-body {
+    background-color: rgba(247, 250, 252, 0.6);
 }
 
 .CursoCard-wrapper .card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    transition: color 0.4s ease-out;
+}
+
+.CursoCard-wrapper .card:hover .card-title {
+    color: #2c6fd1;
 }
 
 .CursoCard-wrapper .card-text {
-    font-size: 0.95rem;
-    color: #e0e0e0;
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #718096;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.CursoCard-wrapper .curso-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+}
+
+.CursoCard-wrapper .curso-rating {
+    color: #ff6b35;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.CursoCard-wrapper .curso-duration {
+    color: #718096;
+    display: flex;
+    align-items: center;
 }
 
 .CursoCard-wrapper .btn-primary {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 2rem;
-    padding: 0.5rem 1.25rem;
-    font-weight: 500;
+    background: linear-gradient(135deg, #2c6fd1 0%, #1a56b6 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
     color: #fff;
-    transition: background 0.3s ease, transform 0.2s;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0); /* Aceleração por hardware */
+}
+
+.CursoCard-wrapper .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
 }
 
 .CursoCard-wrapper .btn-primary:hover {
-    background: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(135deg, #1a56b6 0%, #2c6fd1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(44, 111, 209, 0.35);
+}
+
+.CursoCard-wrapper .btn-primary:hover::before {
+    left: 100%;
+}
+
+.CursoCard-wrapper .progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: #edf2f7;
+    border-radius: 3px;
+    margin: 1rem 0;
+    overflow: hidden;
+}
+
+.CursoCard-wrapper .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2c6fd1, #5c9ce6);
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.CursoCard-wrapper .progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% {
+        left: -20px;
+        opacity: 0.6;
+    }
+    70% {
+        opacity: 0.8;
+    }
+    100% {
+        left: 100%;
+        opacity: 0.6;
+    }
+}
+
+.CursoCard-wrapper .progress-text {
+    font-size: 0.8rem;
+    color: #718096;
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+.CursoCard-wrapper .badge {
+    background: rgba(255, 107, 53, 0.15);
+    color: #ff6b35;
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+    transition: all 0.4s ease-out;
+}
+
+.CursoCard-wrapper .card:hover .badge {
     transform: scale(1.05);
-    color: #000;
 }
 
 .CursoCard-wrapper .card .fa-star {
     margin-right: 3px;
-    font-size: 1rem;
+    font-size: 0.9rem;
+}
+
+/* Estados do curso */
+.CursoCard-wrapper .curso-completo .badge {
+    background: rgba(76, 175, 80, 0.15);
+    color: #2d7d32;
+}
+
+.CursoCard-wrapper .curso-pendente .badge {
+    background: rgba(255, 152, 0, 0.15);
+    color: #dd6b20;
+}
+
+/* Efeito de flutuação sutil */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0.5deg);
+    }
+    50% {
+        transform: translateY(-5px) rotate(-0.5deg);
+    }
+}
+
+.CursoCard-wrapper:nth-child(odd) .card {
+    animation: float 8s ease-in-out infinite;
+}
+
+.CursoCard-wrapper:nth-child(even) .card {
+    animation: float 9s ease-in-out infinite 1s;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .CursoCard-wrapper .card-img-top {
+        height: 160px;
+    }
+
+    .CursoCard-wrapper .card-body {
+        padding: 1.25rem;
+    }
+
+    .CursoCard-wrapper .card-title {
+        font-size: 1rem;
+    }
+
+    .CursoCard-wrapper .card-text {
+        font-size: 0.85rem;
+    }
+
+    .CursoCard-wrapper .btn-primary {
+        padding: 0.65rem 1.25rem;
+    }
+
+    /* Reduzir animações em mobile para performance */
+    @media (prefers-reduced-motion: no-preference) {
+        .CursoCard-wrapper .card {
+            transition: all 0.3s ease;
+        }
+
+        .CursoCard-wrapper .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .CursoCard-wrapper:nth-child(odd) .card,
+        .CursoCard-wrapper:nth-child(even) .card {
+            animation: none;
+        }
+    }
 }

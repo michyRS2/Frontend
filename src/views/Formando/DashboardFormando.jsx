@@ -31,13 +31,15 @@ const DashboardFormando = () => {
     fetchDashboard();
   }, []);
 
-  // 2) Quando tivermos cursos, buscar a contagem de quizzes por curso
+  // 2) Buscar a contagem de quizzes por curso
   useEffect(() => {
     if (!dashboardData) return;
 
     const ids = new Set();
     (dashboardData.cursosInscritos || []).forEach((c) => ids.add(c.ID_Curso));
-    (dashboardData.cursosRecomendados || []).forEach((c) => ids.add(c.ID_Curso));
+    (dashboardData.cursosRecomendados || []).forEach((c) =>
+      ids.add(c.ID_Curso)
+    );
 
     if (ids.size === 0) return;
 
@@ -72,8 +74,8 @@ const DashboardFormando = () => {
   if (loading)
     return (
       <div className="loading-container">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-3">A carregar o seu dashboard...</p>
+        <div className="loading-spinner"></div>
+        <p>Carregando o seu dashboard...</p>
       </div>
     );
 
@@ -84,28 +86,100 @@ const DashboardFormando = () => {
       </div>
     );
 
-  const { cursosInscritos, cursosRecomendados, forum, percursoFormativo } = dashboardData;
+  const { cursosInscritos, cursosRecomendados, forum, percursoFormativo } =
+    dashboardData;
+
+  // Calcular estatísticas para exibir
+  const totalCursos = cursosInscritos ? cursosInscritos.length : 0;
+  const cursosConcluidos = cursosInscritos
+    ? cursosInscritos.filter((curso) => curso.Progresso === 100).length
+    : 0;
+  const progressoMedio =
+    cursosInscritos && cursosInscritos.length > 0
+      ? Math.round(
+          cursosInscritos.reduce(
+            (acc, curso) => acc + (curso.Progresso || 0),
+            0
+          ) / cursosInscritos.length
+        )
+      : 0;
 
   return (
     <div className="dashboard-container">
+      {/* Header de Boas-Vindas */}
+      <div className="dashboard-header">
+        <h1>Bem-vindo ao Seu Dashboard</h1>
+        <p>Acompanhe seu progresso e descubra novos cursos</p>
+      </div>
+
+      {/* Estatísticas Rápidas */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-book"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{totalCursos}</h3>
+            <p>Cursos Inscritos</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-check-circle"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{cursosConcluidos}</h3>
+            <p>Cursos Concluídos</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-chart-line"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{progressoMedio}%</h3>
+            <p>Progresso Médio</p>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-icon">
+            <i className="fas fa-comments"></i>
+          </div>
+          <div className="stat-content">
+            <h3>{forum ? forum.length : 0}</h3>
+            <p>Tópicos do Fórum</p>
+          </div>
+        </div>
+      </div>
+
       <Container className="mt-4">
         {/* Cursos Inscritos */}
         <section className="mt-5 carousel-section">
           <div className="section-header">
-            <h2>Cursos Inscritos</h2>
-            <p className="section-description">Os cursos em que está atualmente inscrito</p>
+            <h2>
+              <i className="fas fa-graduation-cap"></i> Cursos Inscritos
+            </h2>
+            <p className="section-description">
+              Os cursos em que está atualmente inscrito
+            </p>
           </div>
           <div className="carousel-container">
             <div className="scroll-carousel">
-              {(cursosInscritos || []).map((curso) => (
-                <div key={curso.ID_Curso} className="carousel-item-card">
-                  <CursoCard curso={{ ...curso, inscrito: true }} />
-                  {/* badge com nº de quizzes */}
-                  <div className="text-center mt-2 small text-muted">
-                    Quizzes: <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+              {cursosInscritos &&
+                cursosInscritos.map((curso) => (
+                  <div key={curso.ID_Curso} className="carousel-item-card">
+                    <CursoCard curso={{ ...curso, inscrito: true }} />
+
+                    {/* badge com nº de quizzes */}
+                    <div className="text-center mt-2 small text-muted">
+                      Quizzes:{" "}
+                      <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </section>
@@ -113,20 +187,27 @@ const DashboardFormando = () => {
         {/* Cursos Recomendados */}
         <section className="mt-5 carousel-section">
           <div className="section-header">
-            <h2>Cursos Recomendados</h2>
-            <p className="section-description">Baseado no seu perfil e interesses</p>
+            <h2>
+              <i className="fas fa-lightbulb"></i> Cursos Recomendados
+            </h2>
+            <p className="section-description">
+              Baseado no seu perfil e interesses
+            </p>
           </div>
           <div className="carousel-container">
             <div className="scroll-carousel">
-              {(cursosRecomendados || []).map((curso) => (
-                <div key={curso.ID_Curso} className="carousel-item-card">
-                  <CursoCard curso={{ ...curso, inscrito: false }} />
-                  {/* badge com nº de quizzes */}
-                  <div className="text-center mt-2 small text-muted">
-                    Quizzes: <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+              {cursosRecomendados &&
+                cursosRecomendados.map((curso) => (
+                  <div key={curso.ID_Curso} className="carousel-item-card">
+                    <CursoCard curso={{ ...curso, inscrito: false }} />
+
+                    {/* badge com nº de quizzes */}
+                    <div className="text-center mt-2 small text-muted">
+                      Quizzes:{" "}
+                      <strong>{quizCounts[curso.ID_Curso] ?? "—"}</strong>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
         </section>
@@ -136,7 +217,9 @@ const DashboardFormando = () => {
           <section className="mt-5 carousel-section">
             <div className="section-header">
               <h2>Percurso Formativo</h2>
-              <p className="section-description">O seu plano de aprendizagem personalizado</p>
+              <p className="section-description">
+                O seu plano de aprendizagem personalizado
+              </p>
             </div>
             <div className="carousel-container">
               <div className="scroll-carousel">
@@ -146,7 +229,8 @@ const DashboardFormando = () => {
                     {/* se etapa também tiver ID_Curso e quiseres mostrar: */}
                     {etapa.ID_Curso && (
                       <div className="text-center mt-2 small text-muted">
-                        Quizzes: <strong>{quizCounts[etapa.ID_Curso] ?? "—"}</strong>
+                        Quizzes:{" "}
+                        <strong>{quizCounts[etapa.ID_Curso] ?? "—"}</strong>
                       </div>
                     )}
                   </div>
@@ -159,16 +243,21 @@ const DashboardFormando = () => {
         {/* Últimos Tópicos do Fórum */}
         <section className="mt-5 carousel-section">
           <div className="section-header">
-            <h2>Últimos Tópicos do Fórum</h2>
-            <p className="section-description">Participe nas discussões da comunidade</p>
+            <h2>
+              <i className="fas fa-comments"></i> Últimos Tópicos do Fórum
+            </h2>
+            <p className="section-description">
+              Participe nas discussões da comunidade
+            </p>
           </div>
           <div className="carousel-container">
             <div className="scroll-carousel">
-              {(forum || []).map((topico) => (
-                <div key={topico.ID_Forum} className="carousel-item-card">
-                  <ForumCard topico={topico} />
-                </div>
-              ))}
+              {forum &&
+                forum.map((topico) => (
+                  <div key={topico.ID_Forum} className="carousel-item-card">
+                    <ForumCard topico={topico} />
+                  </div>
+                ))}
             </div>
           </div>
         </section>

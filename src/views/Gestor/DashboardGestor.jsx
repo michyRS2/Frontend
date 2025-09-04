@@ -8,7 +8,13 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid
 } from "recharts";
+import "../../styles/DashboardGestor.css";
 
 const API = "https://backend-4tkw.onrender.com";
 
@@ -57,7 +63,6 @@ const DashboardGestor = () => {
     }
   };
 
-  // --------- AGORA NAVEGA PARA A PÁGINA DO NOVO QUIZ ---------
   const handleAdicionarQuiz = (curso) => {
     navigate(`/gestor/cursos/${curso.ID_Curso}/novo-quiz`);
   };
@@ -73,16 +78,8 @@ const DashboardGestor = () => {
   );
 
   const coresDashboard = [
-    "#d53e4f",
-    "#8cd3ff",
-    "#Fdae61",
-    "#abdda4",
-    "#f46d43",
-    "#fee08b",
-    "#5e4fa2",
-    "#66c2a5",
-    "#9e0142",
-    "#e6f598",
+    "#2c6fd1", "#ff6b35", "#38a169", "#d53e4f", "#805ad5",
+    "#d69e2e", "#319795", "#e53e3e", "#00a3c4", "#0987a0"
   ];
 
   const dadosUtilizadores = stats
@@ -93,269 +90,263 @@ const DashboardGestor = () => {
       ]
     : [];
 
-  if (loading) return <p>A carregar dados...</p>;
-  if (!stats) return <p>Erro ao carregar estatísticas.</p>;
+  if (loading) return (
+      <div className="dashboard-gestor loading">
+        <div className="loading-spinner"></div>
+        <p>Carregando dados...</p>
+      </div>
+  );
+
+  if (!stats) return (
+      <div className="dashboard-gestor error">
+        <p>Erro ao carregar estatísticas.</p>
+      </div>
+  );
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard do Gestor</h1>
+    <div className="dashboard-gestor">
+        <div className="dashboard-header">
+          <h1>Dashboard do Gestor</h1>
+          <p>Visão geral da plataforma e estatísticas</p>
+        </div>
+
+        {/* --------- ESTATÍSTICAS RÁPIDAS --------- */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon">
+              <i className="fas fa-users"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{stats.totalUtilizadores || 0}</h3>
+              <p>Total de Utilizadores</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon">
+              <i className="fas fa-book"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{stats.totalCursos || 0}</h3>
+              <p>Total de Cursos</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon">
+              <i className="fas fa-chart-line"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{stats.novosUtilizadores || 0}</h3>
+              <p>Novos Utilizadores (Mês)</p>
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-icon">
+              <i className="fas fa-check-circle"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{stats.utilizadoresAtivos || 0}</h3>
+              <p>Utilizadores Ativos</p>
+            </div>
+          </div>
+        </div>
 
       {/* --------- GRÁFICOS --------- */}
-      <div
-        className="p-6 rounded-1xl shadow-md"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gridTemplateRows: "auto auto",
-          gap: "1.5rem",
-          minHeight: 320,
-        }}
-      >
-        {/* Categorias */}
-        <div
-          style={{
-            gridRow: "1 / span 1",
-            backgroundColor: "#2e2e2ed2",
-            borderRadius: 16,
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "right",
-            flex: 1,
-          }}
-        >
-          <div className="d-flex justify-content-between">
-            <h2 className="text-xl font-semibold text-white">Gestão de Categorias</h2>
-            <div className="d-flex">
-              <Link
-                to="/gestor/gerircategorias"
-                className="btn btn-primary py-2 d-flex align-items-center me-2"
-              >
-                Gerir Categorias
-              </Link>
-              <Link
-                to="/gestor/novacategoria"
-                className="btn btn-success p-1 d-flex align-items-center"
-              >
-                Criar Nova Categoria
-              </Link>
+        <div className="charts-container">
+          <div className="chart-wrapper">
+            <div className="chart-header">
+              <h2>Distribuição por Categoria</h2>
+              <div className="chart-actions">
+                <Link to="/gestor/gerircategorias" className="btn btn-outline">
+                  <i className="fas fa-cog"></i> Gerir Categorias
+                </Link>
+                <Link to="/gestor/novacategoria" className="btn btn-primary">
+                  <i className="fas fa-plus"></i> Nova Categoria
+                </Link>
+              </div>
             </div>
-          </div>
-
-          <div style={{ width: "100%", height: 360, display: "flex", flexDirection: "column" }}>
-            <div style={{ flex: 1 }}>
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="chart-content">
+              <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={stats.cursosPorCategoria}
-                    dataKey="total"
-                    nameKey="categoria"
-                    cx="45%"
-                    cy="50%"
-                    outerRadius={120}
-                    innerRadius={0}
-                    stroke="#fff"
-                    strokeWidth={2}
-                    label
+                      data={stats.cursosPorCategoria}
+                      dataKey="total"
+                      nameKey="categoria"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      innerRadius={60}
+                      label
                   >
                     {stats.cursosPorCategoria.map((_, i) => (
-                      <Cell key={`cell-${i}`} fill={coresDashboard[i % coresDashboard.length]} />
+                        <Cell key={`cell-${i}`} fill={coresDashboard[i % coresDashboard.length]} />
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend
-                    layout="vertical"
-                    verticalAlign="middle"
-                    align="left"
-                    iconType="circle"
-                    wrapperStyle={{ fontSize: 15 }}
-                  />
+                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <p className="text-white text-sm mt-2 text-center">
-              Distribuição dos cursos por categoria
-            </p>
+          </div>
+
+        <div className="chart-wrapper">
+            <div className="chart-header">
+              <h2>Estatísticas de Utilizadores</h2>
+              <div className="chart-actions">
+                <Link to="/gestor/gerir-utilizadores" className="btn btn-outline">
+                  <i className="fas fa-user-cog"></i> Gerir Utilizadores
+                </Link>
+              </div>
+            </div>
+            <div className="chart-content">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={dadosUtilizadores}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="nome" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="valor" fill="#2c6fd1" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
-        {/* Utilizadores */}
-        <div
-          style={{
-            backgroundColor: "#2e2e2ed2",
-            borderRadius: 16,
-            padding: "1rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "right",
-            flex: 1,
-          }}
-        >
-          <div className="d-flex justify-content-between">
-            <h2 className="text-xl font-semibold text-white">Estatísticas de Utilizadores</h2>
-            <div className="d-flex">
-              <Link to="/gestor/gerir-utilizadores"className="btn btn-primary py-2 d-flex align-items-center me-2">
-                Gerir utilizadores
+      {/* --------- LISTA DE CURSOS --------- */}
+        <div className="courses-section">
+          <div className="section-header">
+            <h2>Gestão de Cursos</h2>
+            <div className="header-actions">
+              <div className="filter-buttons">
+                <button
+                    className={filtroTipo === "todos" ? "btn active" : "btn"}
+                    onClick={() => setFiltroTipo("todos")}
+                >
+                  <i className="fas fa-layer-group"></i> Todos
+                </button>
+                <button
+                    className={filtroTipo === "síncrono" ? "btn active" : "btn"}
+                    onClick={() => setFiltroTipo("síncrono")}
+                >
+                  <i className="fas fa-video"></i> Síncronos
+                </button>
+                <button
+                    className={filtroTipo === "assíncrono" ? "btn active" : "btn"}
+                    onClick={() => setFiltroTipo("assíncrono")}
+                >
+                  <i className="fas fa-clock"></i> Assíncronos
+                </button>
+              </div>
+              <Link to="/gestor/criar-curso" className="btn btn-primary">
+                <i className="fas fa-plus"></i> Criar Novo Curso
               </Link>
             </div>
           </div>
-          <div style={{ width: "100%", height: 360, display: "flex", flexDirection: "column" }}>
-            <div style={{ flex: 1 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={dadosUtilizadores}
-                    dataKey="valor"
-                    nameKey="nome"
-                    cx="55%"
-                    cy="45%"
-                    outerRadius={120}
-                    innerRadius={70}
-                    stroke="#fff"
-                    strokeWidth={2}
-                    label
-                  >
-                    {dadosUtilizadores.map((_, i) => (
-                      <Cell key={`cell-user-${i}`} fill={coresDashboard[i % coresDashboard.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend
-                    layout="vertical"
-                    verticalAlign="middle"
-                    align="right"
-                    iconType="circle"
-                    wrapperStyle={{ fontSize: 15 }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="text-white text-sm mt-2 text-center">Estatísticas gerais dos utilizadores</p>
+
+      <div className="table-container">
+            {cursosFiltrados.length === 0 ? (
+                <div className="empty-state">
+                  <i className="fas fa-book-open"></i>
+                  <p>Não há cursos disponíveis.</p>
+                </div>
+            ) : (
+                <table className="courses-table">
+                  <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    {mostrarCamposSincronos && <th>Formador</th>}
+                    {mostrarCamposSincronos && <th>Vagas</th>}
+                    <th>Data Início</th>
+                    <th>Data Fim</th>
+                    <th>Estado</th>
+                    <th>Quizzes</th>
+                    <th>Ações</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  {cursosFiltrados.map((curso) => {
+                    const dataInicioFormatada = new Date(curso.Data_Inicio).toLocaleDateString("pt-PT");
+                    const dataFimFormatada = new Date(curso.Data_Fim).toLocaleDateString("pt-PT");
+
+                    const estadoFormatado = (() => {
+                      switch ((curso.Estado_Curso || "").toLowerCase()) {
+                        case "ativo":
+                          return "Ativo";
+                        case "em curso":
+                          return "Em curso";
+                        case "terminado":
+                          return "Terminado";
+                        default:
+                          return curso.Estado_Curso || "Desconhecido";
+                      }
+                    })();
+
+                    const quizzesCount = Number(
+                        curso.Num_Quizzes ?? curso.num_quizzes ?? curso.quizzesCount ?? 0
+                    );
+
+                    return (
+                        <tr key={curso.ID_Curso}>
+                          <td className="course-name">{curso.Nome_Curso}</td>
+                          <td>
+                        <span className={`badge ${curso.Tipo_Curso?.toLowerCase()}`}>
+                          {curso.Tipo_Curso}
+                        </span>
+                          </td>
+                          {mostrarCamposSincronos && (
+                              <td>{curso.Tipo_Curso === "síncrono" ? curso.formador?.Nome || "—" : "—"}</td>
+                          )}
+                          {mostrarCamposSincronos && (
+                              <td>{curso.Tipo_Curso === "síncrono" ? curso.Vagas : "—"}</td>
+                          )}
+                          <td>{dataInicioFormatada}</td>
+                          <td>{dataFimFormatada}</td>
+                          <td>
+                        <span className={`status-badge ${estadoFormatado.toLowerCase().replace(" ", "-")}`}>
+                          {estadoFormatado}
+                        </span>
+                          </td>
+                          <td>
+                            <span className="quiz-count">{quizzesCount}</span>
+                          </td>
+                          <td>
+                            <div className="action-buttons">
+                              <button
+                                  onClick={() => handleEditarCurso(curso)}
+                                  className="btn-icon"
+                                  title="Editar curso"
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
+                                  onClick={() => handleAdicionarQuiz(curso)}
+                                  className="btn-icon"
+                                  title="Adicionar quiz"
+                              >
+                                <i className="fas fa-plus-circle"></i>
+                              </button>
+                              <button
+                                  onClick={() => handleEliminarCurso(curso)}
+                                  className="btn-icon danger"
+                                  title="Eliminar curso"
+                              >
+                                <i className="fas fa-trash"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                    );
+                  })}
+                  </tbody>
+                </table>
+            )}
           </div>
         </div>
       </div>
-
-      {/* --------- FILTROS --------- */}
-      <div className="flex items-center justify-between mt-4 mb-3">
-        <h2 className="text-xl font-semibold">Lista de Cursos</h2>
-        <div className="d-flex">
-          <button
-            className={`btn btn-md d-flex align-items-center me-2 ${filtroTipo === "todos" ? "btn-light" : "btn-primary"}`}
-            onClick={() => setFiltroTipo("todos")}
-          >
-            Todos
-          </button>
-          <button
-            className={`btn btn-md d-flex align-items-center me-2 ${filtroTipo === "síncrono" ? "btn-light" : "btn-primary"}`}
-            onClick={() => setFiltroTipo("síncrono")}
-          >
-            Síncronos
-          </button>
-          <button
-            className={`btn btn-md ${filtroTipo === "assíncrono" ? "btn-light" : "btn-primary"}`}
-            onClick={() => setFiltroTipo("assíncrono")}
-          >
-            Assíncronos
-          </button>
-        </div>
-        <div className="align-right mt-3">
-          <Link to="/gestor/criar-curso" className="btn btn-success">
-            Criar Novo Curso
-          </Link>
-        </div>
-      </div>
-
-      {/* --------- TABELA --------- */}
-      {cursosFiltrados.length === 0 ? (
-        <p>Não há cursos disponíveis.</p>
-      ) : (
-        <div className="table-responsive">
-          <table className="table table-bordered table-hover align-middle mb-0">
-            <thead className="table-dark text-center">
-              <tr>
-                <th>Nome</th>
-                <th>Tipo</th>
-                {mostrarCamposSincronos && <th>Formador</th>}
-                {mostrarCamposSincronos && <th>Vagas</th>}
-                <th>Data Início</th>
-                <th>Data Fim</th>
-                <th>Estado</th>
-                <th>Quizzes</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-
-            <tbody className="text-center">
-              {cursosFiltrados.map((curso) => {
-                const dataInicioFormatada = new Date(curso.Data_Inicio).toLocaleDateString("pt-PT");
-                const dataFimFormatada = new Date(curso.Data_Fim).toLocaleDateString("pt-PT");
-
-                const estadoFormatado = (() => {
-                  switch ((curso.Estado_Curso || "").toLowerCase()) {
-                    case "ativo":
-                      return "Ativo";
-                    case "em curso":
-                      return "Em curso";
-                    case "terminado":
-                      return "Terminado";
-                    default:
-                      return curso.Estado_Curso || "Desconhecido";
-                  }
-                })();
-
-                // aceita diferentes nomes de campo (defensivo)
-                const quizzesCount = Number(
-                  curso.Num_Quizzes ?? curso.num_quizzes ?? curso.quizzesCount ?? 0
-                );
-
-                return (
-                  <tr key={curso.ID_Curso}>
-                    <td>{curso.Nome_Curso}</td>
-                    <td>{curso.Tipo_Curso}</td>
-                    {mostrarCamposSincronos && (
-                      <td>{curso.Tipo_Curso === "síncrono" ? curso.formador?.Nome || "—" : "—"}</td>
-                    )}
-                    {mostrarCamposSincronos && (
-                      <td>{curso.Tipo_Curso === "síncrono" ? curso.Vagas : "—"}</td>
-                    )}
-                    <td>{dataInicioFormatada}</td>
-                    <td>{dataFimFormatada}</td>
-                    <td>{estadoFormatado}</td>
-
-                    {/* Nº de quizzes */}
-                    <td>{quizzesCount}</td>
-
-                    <td>
-                      <div className="d-flex justify-content-center gap-2 flex-wrap">
-                        <button
-                          onClick={() => handleEditarCurso(curso)}
-                          className="btn btn-primary btn-sm"
-                        >
-                          Editar
-                        </button>
-                        <button
-                          onClick={() => handleEliminarCurso(curso)}
-                          className="btn btn-danger btn-sm"
-                        >
-                          Eliminar
-                        </button>
-                        <button
-                          onClick={() => handleAdicionarQuiz(curso)}
-                          className="btn btn-success btn-sm"
-                          title="Adicionar novo quiz"
-                        >
-                          + Quiz
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
   );
 };
 
