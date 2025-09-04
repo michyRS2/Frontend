@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button } from "react-bootstrap";
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,8 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
   const [curso, setCurso] = useState(initialCurso);
   const [hover, setHover] = useState(null);
   const navigate = useNavigate();
+    const [quizzesCount, setQuizzesCount] = useState(undefined);
+
 
   const image = curso.Imagem || "default-image-url.jpg";
   const formador =
@@ -22,6 +24,29 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
   const rating = Math.max(0, Math.min(5, ratingRaw));
   const numAval = Number(curso.Numero_Avaliacoes ?? 0);
   const minhaAvaliacao = curso.Minha_Avaliacao ?? null;
+
+
+  // buscar nº de quizzes
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const r = await fetch(`${BASE_URL}/api/curso/${curso.ID_Curso}/quizzes`, {
+          credentials: "include",
+        });
+        if (!alive) return;
+        if (r.ok) {
+          const arr = await r.json();
+          setQuizzesCount(Array.isArray(arr) ? arr.length : 0);
+        } else {
+          setQuizzesCount(0);
+        }
+      } catch {
+        setQuizzesCount(0);
+      }
+    })();
+    return () => { alive = false; };
+  }, [curso.ID_Curso]);
 
   async function handleRate(nota) {
     try {
@@ -81,6 +106,13 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
     navigate(rota);
   };
 
+   const handleAbrirQuiz = () => {
+    navigate(`/quiz/curso/${curso.ID_Curso}`);
+  };
+
+    const hasQuiz = Number(quizzesCount) > 0;
+
+
   return (
     <div className="CursoCard-wrapper">
       <Card style={{ width: "18rem", overflow: "hidden" }}>
@@ -109,6 +141,12 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
             <div className="d-flex gap-2">
               <Button variant="primary" onClick={handleVerDetalhes}>
                 Ver Detalhes
+              </Button>
+              <Button
+                variant={hasQuiz ? "warning" : "outline-secondary"}
+                onClick={handleAbrirQuiz}
+              >
+                Ver Quiz
               </Button>
             </div>
           )}
