@@ -32,6 +32,7 @@ import CursosTopico from "./views/Formando/CursosTopico";
 import GerirUtilizadores from "./views/Gestor/GerirUtilizadores";
 import SearchResults from "./components/SearchResults";
 import QuizCurso from "./views/Formando/QuizCurso";
+import QuizzesDoCursoVisualizacao from "./views/Formando/QuizzesDoCursoVisualizacao";
 import QuizResponder from "./views/Formando/QuizResponder";
 import NovoQuiz from "./views/Gestor/NovoQuiz";
 import TesteBackend from "./views/TesteBackend";
@@ -65,6 +66,8 @@ function App() {
             <Route path="/formando/topico/:topicoId/cursos" element={<CursosTopico />} />
             <Route path="/quiz/curso/:id" element={<QuizCurso />} />
             <Route path="/quiz/:quizId" element={<QuizResponder />} />
+            <Route path="/quizzes-visualizacao/:id" element={<QuizzesDoCursoVisualizacao />} />
+
 
             {/* Gestor Routes */}
             <Route path="/gestor/dashboard" element={<DashboardGestor />} />
