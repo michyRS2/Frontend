@@ -111,15 +111,19 @@ return [id, { totalQuizzes, progressoMedio }];
     ? cursosInscritos.filter((curso) => (quizProgress[curso.ID_Curso] || 0) === 100).length
     : 0;
 
-  const progressoMedio =
-    cursosInscritos && cursosInscritos.length > 0
-      ? Math.round(
-          cursosInscritos.reduce(
-            (acc, curso) => acc + (quizProgress[curso.ID_Curso] || 0),
-            0
-          ) / cursosInscritos.length
-        )
-      : 0;
+  let totalPercent = 0;
+let totalQuizzesCount = 0;
+
+cursosInscritos.forEach((curso) => {
+  const percent = quizProgress[curso.ID_Curso] ?? 0;
+  const quizzes = quizCounts[curso.ID_Curso] ?? 0;
+
+  totalPercent += percent * quizzes; // ponderar pelo nº de quizzes
+  totalQuizzesCount += quizzes;
+});
+
+const progressoMedio = totalQuizzesCount > 0 ? Math.round(totalPercent / totalQuizzesCount) : 0;
+
 
   return (
     <div className="dashboard-container">
