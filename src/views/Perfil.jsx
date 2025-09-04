@@ -8,65 +8,69 @@ const Perfil = () => {
     const [stats, setStats] = useState({
         completedCourses: 0,
         averageProgress: 0,
-        hoursTrained: 0
     });
     const [loadingStats, setLoadingStats] = useState(true);
     const [error, setError] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [passwordSuccess, setPasswordSuccess] = useState('');
+    const [cursosInscritos, setCursosInscritos] = useState([]);
+
 
     useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                setLoadingStats(true);
-                setError('');
+    const fetchStats = async () => {
+        try {
+            setLoadingStats(true);
+            setError('');
 
-                // Obter dados do dashboard
-                const dashboardResponse = await api.get('/formando/dashboard');
-                const dashboardData = dashboardResponse.data;
-                const cursosInscritos = dashboardData.cursosInscritos || [];
-                setUserEmail(dashboardData.Email || '');
+            // Obter dados do dashboard
+            const dashboardResponse = await api.get('/formando/dashboard');
+            const dashboardData = dashboardResponse.data;
+            const inscritos = dashboardData.cursosInscritos || [];
+            setCursosInscritos(inscritos);
 
-                let totalPercent = 0;
-                let totalQuizzesCount = 0;
-                let completedCourses = 0;
+            setUserEmail(dashboardData.Email || '');
 
-                // Buscar progresso de cada curso
-                await Promise.all(cursosInscritos.map(async (curso) => {
-                    try {
-                        const r = await api.get(`/api/curso/${curso.ID_Curso}/quizzes/progresso`);
-                        const data = r.data;
-                        const progressoMedio = Number(data.mediaPercent ?? 0);
-                        const totalQuizzes = data.total ?? 0;
+            let totalPercent = 0;
+            let totalQuizzesCount = 0;
+            let completedCourses = 0;
 
-                        totalPercent += progressoMedio * totalQuizzes;
-                        totalQuizzesCount += totalQuizzes;
+            // Buscar progresso de cada curso
+            await Promise.all(inscritos.map(async (curso) => {
+                try {
+                    const r = await api.get(`/api/curso/${curso.ID_Curso}/quizzes/progresso`);
+                    const data = r.data;
+                    const progressoMedio = Number(data.mediaPercent ?? 0);
+                    const totalQuizzes = data.total ?? 0;
 
-                        if (progressoMedio === 100) completedCourses += 1;
-                    } catch {
-                        // ignorar erro individual
-                    }
-                }));
+                    totalPercent += progressoMedio * totalQuizzes;
+                    totalQuizzesCount += totalQuizzes;
 
-                const averageProgress = totalQuizzesCount > 0 ? Math.round(totalPercent / totalQuizzesCount) : 0;
+                    if (progressoMedio === 100) completedCourses += 1;
+                } catch {
+                    // ignorar erro individual
+                }
+            }));
 
-                setStats({
-                    completedCourses,
-                    averageProgress,
-                    hoursTrained: dashboardData.hoursTrained || 0
-                });
+            const averageProgress = totalQuizzesCount > 0 ? Math.round(totalPercent / totalQuizzesCount) : 0;
 
-                setLoadingStats(false);
-            } catch (err) {
-                console.error('Erro ao carregar estatísticas:', err);
-                setError('Erro ao carregar estatísticas do perfil');
-                setLoadingStats(false);
-            }
-        };
+            setStats({
+                completedCourses,
+                averageProgress,
+                totalCursos: inscritos.length, // ✅ adicionar total de cursos inscritos
+            });
 
-        fetchStats();
-    }, []);
+            setLoadingStats(false);
+        } catch (err) {
+            console.error('Erro ao carregar estatísticas:', err);
+            setError('Erro ao carregar estatísticas do perfil');
+            setLoadingStats(false);
+        }
+    };
+
+    fetchStats();
+}, []);
+
 
     const handlePasswordRecovery = async () => {
         if (!userEmail) {
@@ -111,6 +115,10 @@ const Perfil = () => {
                                     <Col md={4} className="stat-item">
                                         <div className="stat-value">{stats.averageProgress}%</div>
                                         <div className="stat-label">Progresso Médio</div>
+                                    </Col>
+                                    <Col md={4} className="stat-item">
+                                        <div className="stat-value">{stats.totalCursos}%</div>
+                                        <div className="stat-label">Cursos Inscritos</div>
                                     </Col>
                                     
                                 </Row>
