@@ -18,7 +18,11 @@ export default function QuizzesDoCursoVisualizacao() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState("");
-  const [meta, setMeta] = useState({ mediaPercent: null, respondidos: 0, total: 0 });
+  const [meta, setMeta] = useState({
+    mediaPercent: null,
+    respondidos: 0,
+    total: 0,
+  });
 
   useEffect(() => {
     async function carregar() {
@@ -51,7 +55,8 @@ export default function QuizzesDoCursoVisualizacao() {
 
   if (loading) return <p className="container py-3">A carregar…</p>;
   if (erro) return <p className="container py-3 text-danger">{erro}</p>;
-  if (!quizzes.length) return <p className="container py-3">Este curso ainda não tem quizzes.</p>;
+  if (!quizzes.length)
+    return <p className="container py-3">Este curso ainda não tem quizzes.</p>;
 
   // Função para cor da progress bar
   const getProgressVariant = (percent) => {
@@ -65,7 +70,10 @@ export default function QuizzesDoCursoVisualizacao() {
     <Container className="py-3">
       <h2 className="mb-3">Quizzes Concluídos do Curso #{id}</h2>
       <div className="mb-3 small text-muted">
-        Feitos: <strong>{meta.respondidos}</strong> / {meta.total} | Média: <strong>{meta.mediaPercent != null ? `${meta.mediaPercent}%` : "—"}</strong>
+        Feitos: <strong>{meta.respondidos}</strong> / {meta.total} | Média:{" "}
+        <strong>
+          {meta.mediaPercent != null ? `${meta.mediaPercent}%` : "—"}
+        </strong>
       </div>
 
       <Row xs={1} md={2} lg={3} className="g-3">
@@ -78,17 +86,27 @@ export default function QuizzesDoCursoVisualizacao() {
                   {q.feito ? (
                     <>
                       <div className="mb-2">
-                        <Badge bg="success" className="me-2">Feito</Badge>
+                        <Badge bg="success" className="me-2">
+                          Feito
+                        </Badge>
                         {q.ultimaData && (
                           <span className="text-muted">
-                            ({new Date(q.ultimaData).toLocaleDateString("pt-PT")})
+                            (
+                            {new Date(q.ultimaData).toLocaleDateString("pt-PT")}
+                            )
                           </span>
                         )}
                       </div>
                       <ProgressBar
                         now={q.ultimaPercent || 0}
                         label={`${q.ultimaPercent || 0}%`}
-                        variant={getProgressVariant(q.ultimaPercent)}
+                        className={
+                          q.ultimaPercent < 50
+                            ? "bg-danger"
+                            : q.ultimaPercent < 80
+                            ? "bg-warning"
+                            : "bg-success"
+                        }
                         animated
                         striped
                       />
