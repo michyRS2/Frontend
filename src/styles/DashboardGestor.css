@@ -189,7 +189,8 @@
 
 .chart-content {
     padding: 1.5rem;
-    height: 300px;
+    height: auto;        /* deixa crescer conforme o gráfico */
+    min-height: 300px;   /* garante que não fique demasiado pequeno */
 }
 
 /* Courses Section */
