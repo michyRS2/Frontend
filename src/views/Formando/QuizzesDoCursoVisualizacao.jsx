@@ -100,10 +100,26 @@ export default function QuizzesDoCursoVisualizacao() {
                       <ProgressBar
   now={q.ultimaPercent || 0}
   label={`${q.ultimaPercent || 0}%`}
-  variant={getProgressVariant(q.ultimaPercent)}
-  animated
-  striped
-/>
+  style={{
+    backgroundColor: '#e9ecef',
+    height: '1.5rem',
+  }}
+  className="mb-2"
+>
+  <ProgressBar
+    now={q.ultimaPercent || 0}
+    label={`${q.ultimaPercent || 0}%`}
+    style={{
+      backgroundColor:
+        q.ultimaPercent < 50
+          ? '#dc3545' // vermelho
+          : q.ultimaPercent < 80
+          ? '#ffc107' // amarelo
+          : '#198754', // verde
+    }}
+  />
+</ProgressBar>
+
 
                     </>
                   ) : (
