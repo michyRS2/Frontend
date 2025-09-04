@@ -66,6 +66,9 @@ const CursoInscrito = () => {
             <p>
               <strong>Tipo:</strong> {curso.Tipo_Curso}
             </p>
+            <p>
+              <strong>Descrição:</strong> {curso.Descricao}
+            </p>
             <p className="status-active">
               <strong>✅ Estás inscrito neste curso</strong>
             </p>
