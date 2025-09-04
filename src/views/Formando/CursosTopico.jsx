@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Form, Badge, Spinner } from "react-b
 import { FaArrowLeft, FaClock, FaUsers, FaStar, FaFilter } from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../../axiosConfig";
-import "../../styles/CursosTopico.css";
+import "../../styles/CursoStyles.css";
 
 const CursosTopico = () => {
   const { topicoId } = useParams();
@@ -92,192 +92,197 @@ const CursosTopico = () => {
 
   if (loading) {
     return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" variant="primary" />
-        <p className="mt-2">A carregar cursos...</p>
-      </Container>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>A carregar cursos...</p>
+        </div>
     );
   }
 
-  return (
-    <Container className="cursos-topico-page">
-      {/* Cabeçalho */}
-      <div className="page-header">
-        <Button variant="outline-secondary" onClick={() => navigate(-1)} className="back-button">
-          <FaArrowLeft className="me-2" />
-          Voltar
-        </Button>
-        <h1>Cursos de {topico?.Nome || "Tópico Desconhecido"}</h1>
-        <p className="text-muted">
-          {cursosFiltrados.length} curso(s) disponível(s)
-        </p>
-      </div>
-
-      <Row>
-        {/* Sidebar de Filtros */}
-        <Col md={3} className="filters-sidebar">
-          <div className="filters-card">
-            <h5><FaFilter className="me-2" />Filtros</h5>
-            
-            {/* Filtro por Tipo */}
-            <div className="filter-group">
-              <h6>Tipo de Curso</h6>
-              <Form.Check
-                type="radio"
-                name="tipo"
-                label="Todos"
-                checked={filtros.tipo === "todos"}
-                onChange={() => handleFiltroChange("tipo", "todos")}
-              />
-              <Form.Check
-                type="radio"
-                name="tipo"
-                label="Assíncrono"
-                checked={filtros.tipo === "assíncrono"}
-                onChange={() => handleFiltroChange("tipo", "assíncrono")}
-              />
-              <Form.Check
-                type="radio"
-                name="tipo"
-                label="Síncrono"
-                checked={filtros.tipo === "síncrono"}
-                onChange={() => handleFiltroChange("tipo", "síncrono")}
-              />
-            </div>
-
-            {/* Filtro por Estado */}
-            <div className="filter-group">
-              <h6>Estado do Curso</h6>
-              <Form.Check
-                type="radio"
-                name="estado"
-                label="Todos"
-                checked={filtros.estado === "todos"}
-                onChange={() => handleFiltroChange("estado", "todos")}
-              />
-              <Form.Check
-                type="radio"
-                name="estado"
-                label="Ativo"
-                checked={filtros.estado === "ativo"}
-                onChange={() => handleFiltroChange("estado", "ativo")}
-              />
-              <Form.Check
-                type="radio"
-                name="estado"
-                label="Em Curso"
-                checked={filtros.estado === "em curso"}
-                onChange={() => handleFiltroChange("estado", "em curso")}
-              />
-            </div>
-
-            {/* Ordenação */}
-            <div className="filter-group">
-              <h6>Ordenar por</h6>
-              <Form.Select
-                value={filtros.order}
-                onChange={(e) => handleFiltroChange("order", e.target.value)}
-              >
-                <option value="relevancia">Relevância</option>
-                <option value="nome">Nome (A-Z)</option>
-                <option value="data">Data mais recente</option>
-                <option value="rating">Melhor avaliação</option>
-              </Form.Select>
-            </div>
-
-            {/* Botão Limpar Filtros */}
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={() => setFiltros({
-                tipo: "todos",
-                estado: "todos",
-                order: "relevancia"
-              })}
-              className="w-100 mt-3"
-            >
-              Limpar Filtros
-            </Button>
+   return (
+      <div className="curso-page">
+        <div className="curso-container">
+          {/* Cabeçalho */}
+          <div className="curso-header">
+            <button className="btn-voltar" onClick={() => navigate(-1)}>
+              <i className="fas fa-arrow-left"></i>
+              <span className="ms-2">Voltar</span>
+            </button>
+            <h1>Cursos de {topico?.Nome || "Tópico Desconhecido"}</h1>
+            <p>{cursosFiltrados.length} curso(s) disponível(s)</p>
           </div>
-        </Col>
 
-        {/* Lista de Cursos */}
-        <Col md={9}>
-          {cursosFiltrados.length === 0 ? (
-            <div className="text-center py-5">
-              <h4>Nenhum curso encontrado</h4>
-              <p className="text-muted">
-                Tente ajustar os filtros para ver mais resultados
-              </p>
+          <div className="cursos-layout">
+            {/* Sidebar de Filtros */}
+            <div className="filtros-sidebar">
+              <h5><i className="fas fa-filter"></i> Filtros</h5>
+
+              {/* Filtro por Tipo */}
+              <div className="filter-group">
+                <h6>Tipo de Curso</h6>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="tipo"
+                      checked={filtros.tipo === "todos"}
+                      onChange={() => handleFiltroChange("tipo", "todos")}
+                  />
+                  <span>Todos</span>
+                </label>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="tipo"
+                      checked={filtros.tipo === "assíncrono"}
+                      onChange={() => handleFiltroChange("tipo", "assíncrono")}
+                  />
+                  <span>Assíncrono</span>
+                </label>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="tipo"
+                      checked={filtros.tipo === "síncrono"}
+                      onChange={() => handleFiltroChange("tipo", "síncrono")}
+                  />
+                  <span>Síncrono</span>
+                </label>
+              </div>
+
+              {/* Filtro por Estado */}
+              <div className="filter-group">
+                <h6>Estado do Curso</h6>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="estado"
+                      checked={filtros.estado === "todos"}
+                      onChange={() => handleFiltroChange("estado", "todos")}
+                  />
+                  <span>Todos</span>
+                </label>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="estado"
+                      checked={filtros.estado === "ativo"}
+                      onChange={() => handleFiltroChange("estado", "ativo")}
+                  />
+                  <span>Ativo</span>
+                </label>
+                <label className="filtro-radio">
+                  <input
+                      type="radio"
+                      name="estado"
+                      checked={filtros.estado === "em curso"}
+                      onChange={() => handleFiltroChange("estado", "em curso")}
+                  />
+                  <span>Em Curso</span>
+                </label>
+              </div>
+
+              {/* Ordenação */}
+              <div className="filter-group">
+                <h6>Ordenar por</h6>
+                <select
+                    value={filtros.order}
+                    onChange={(e) => handleFiltroChange("order", e.target.value)}
+                    className="form-select"
+                >
+                  <option value="relevancia">Relevância</option>
+                  <option value="nome">Nome (A-Z)</option>
+                  <option value="data">Data mais recente</option>
+                  <option value="rating">Melhor avaliação</option>
+                </select>
+              </div>
+
+              {/* Botão Limpar Filtros */}
+              <button
+                  className="btn-voltar"
+                  onClick={() => setFiltros({
+                    tipo: "todos",
+                    estado: "todos",
+                    order: "relevancia"
+                  })}
+                  style={{ width: '100%', marginTop: '1rem' }}
+              >
+                Limpar Filtros
+              </button>
             </div>
-          ) : (
-            <Row>
-              {cursosFiltrados.map(curso => (
-                <Col key={curso.ID_Curso} lg={6} className="mb-4">
-                  <Card className="h-100 curso-card">
-                    {curso.Imagem && (
-                      <Card.Img 
-                        variant="top" 
-                        src={curso.Imagem} 
-                        style={{ height: "200px", objectFit: "cover" }}
-                        onError={(e) => {
-                          e.target.src = "https://via.placeholder.com/300x200?text=Sem+Imagem";
-                        }}
-                      />
-                    )}
-                    <Card.Body className="d-flex flex-column">
-                      <div className="d-flex justify-content-between align-items-start mb-2">
-                        <Badge bg={
-                          curso.Estado_Curso === "ativo" ? "success" : 
-                          curso.Estado_Curso === "em curso" ? "warning" : "secondary"
-                        }>
-                          {curso.Estado_Curso}
-                        </Badge>
-                        <Badge bg="info" text="dark">
-                          {curso.Tipo_Curso}
-                        </Badge>
-                      </div>
-                      <Card.Title className="h5">{curso.Nome_Curso}</Card.Title>
-                      <div className="mt-auto">
-                        <div className="d-flex justify-content-between text-muted small mb-2">
-                          <div className="d-flex align-items-center">
-                            <FaClock className="me-1" />
-                            <span>{calcularDuracao(curso.Data_Inicio, curso.Data_Fim)} dias</span>
-                          </div>
-                          {curso.Vagas && (
-                            <div className="d-flex align-items-center">
-                              <FaUsers className="me-1" />
-                              <span>{curso.Vagas} vagas</span>
-                            </div>
+
+            {/* Lista de Cursos */}
+            <div className="cursos-main">
+              {cursosFiltrados.length === 0 ? (
+                  <div className="empty-state">
+                    <i className="fas fa-folder-open"></i>
+                    <h4>Nenhum curso encontrado</h4>
+                    <p>Tente ajustar os filtros para ver mais resultados</p>
+                  </div>
+              ) : (
+                  <div className="cursos-grid">
+                    {cursosFiltrados.map(curso => (
+                        <div key={curso.ID_Curso} className="curso-card">
+                          {curso.Imagem && (
+                              <img
+                                  src={curso.Imagem}
+                                  alt={curso.Nome_Curso}
+                                  className="curso-imagem"
+                                  onError={(e) => {
+                                    e.target.src = "https://via.placeholder.com/300x200?text=Sem+Imagem";
+                                  }}
+                              />
                           )}
-                          <div className="d-flex align-items-center">
-                            <FaStar className="text-warning me-1" />
-                            <span>{curso.Rating || 0}</span>
+                          <div className="curso-info">
+                            <div className="curso-badges">
+                        <span className={`badge ${curso.Estado_Curso === "ativo" ? "status-active" : curso.Estado_Curso === "em curso" ? "status-pending" : "badge-secondary"}`}>
+                          {curso.Estado_Curso}
+                        </span>
+                              <span className="badge badge-info">
+                          {curso.Tipo_Curso}
+                        </span>
+                            </div>
+                            <h3>{curso.Nome_Curso}</h3>
+
+                            <div className="curso-details">
+                              <div className="curso-meta">
+                                <div>
+                                  <i className="fas fa-clock"></i>
+                                  <span>{calcularDuracao(curso.Data_Inicio, curso.Data_Fim)} dias</span>
+                                </div>
+                                {curso.Vagas && (
+                                    <div>
+                                      <i className="fas fa-users"></i>
+                                      <span>{curso.Vagas} vagas</span>
+                                    </div>
+                                )}
+                                <div>
+                                  <i className="fas fa-star"></i>
+                                  <span>{curso.Rating || 0}</span>
+                                </div>
+                              </div>
+
+                              <div className="curso-dates">
+                                <span>Início: {formatarData(curso.Data_Inicio)}</span>
+                                <span>Fim: {formatarData(curso.Data_Fim)}</span>
+                              </div>
+
+                              <button
+                                  className="btn-voltar"
+                                  onClick={() => navigate(`/cursos/${curso.ID_Curso}`)}
+                                  style={{ width: '100%' }}
+                              >
+                                Ver Detalhes
+                              </button>
+                            </div>
                           </div>
                         </div>
-                        
-                        <div className="d-flex justify-content-between text-muted small mb-3">
-                          <span>Início: {formatarData(curso.Data_Inicio)}</span>
-                          <span>Fim: {formatarData(curso.Data_Fim)}</span>
-                        </div>
-                        
-                        <Button 
-                          variant="primary" 
-                          className="w-100"
-                          onClick={() => navigate(`/cursos/${curso.ID_Curso}`)}
-                        >
-                          Ver Detalhes
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Col>
-      </Row>
-    </Container>
+                    ))}
+                  </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
   );
 };
 
