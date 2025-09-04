@@ -96,13 +96,11 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
             <Card.Text>
               {/* Avaliação do utilizador */}
               {renderStars()}
-              <div style={{ fontSize: 12, marginTop: 4 }}>
-                {minhaAvaliacao != null ? `Deu ${minhaAvaliacao} ⭐` : "Ainda não avaliou"}
-              </div>
+              
 
               {/* Média do curso corrigida */}
               <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
-                ⭐ {rating.toFixed(2)} ({numAval} avaliações)
+                ⭐ {rating.toFixed(2)} ({numAval} classificações)
               </div>
             </Card.Text>
           )}
