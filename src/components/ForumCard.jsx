@@ -9,7 +9,7 @@ const ForumCard = ({ topico }) => (
         </div>
         <p className="forum-card-description">{topico.Descricao}</p>
         <div className="forum-card-footer">
-            <span className="forum-card-author">Por: {topico.Autor}</span>
+            <span className="forum-card-author">Por: {topico.author}</span>
             <span className="forum-card-date">{topico.Data}</span>
         </div>
     </div>
