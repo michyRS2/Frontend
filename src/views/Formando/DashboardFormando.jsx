@@ -55,11 +55,10 @@ const DashboardFormando = () => {
 });
 if (!r.ok) return [id, { totalQuizzes: 0, progressoMedio: 0 }];
 const data = await r.json();
-
 const progressoMedio = Number(data.mediaPercent ?? 0);
 const totalQuizzes = data.total ?? 0;
-
 return [id, { totalQuizzes, progressoMedio }];
+
 
     } catch {
       return [id, { totalQuizzes: 0, progressoMedio: 0 }];
