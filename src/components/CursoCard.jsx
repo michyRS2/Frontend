@@ -6,7 +6,11 @@ import "../styles/CursoCard.css";
 
 const BASE_URL = "https://backend-4tkw.onrender.com";
 
-const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = false }) => {
+const CursoCard = ({
+  curso: initialCurso,
+  hideRatings = false,
+  hideButtons = false,
+}) => {
   const [curso, setCurso] = useState(initialCurso);
   const [hover, setHover] = useState(null);
   const [quizzesCount, setQuizzesCount] = useState(undefined);
@@ -26,9 +30,12 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
     let alive = true;
     (async () => {
       try {
-        const r = await fetch(`${BASE_URL}/api/curso/${curso.ID_Curso}/quizzes`, {
-          credentials: "include",
-        });
+        const r = await fetch(
+          `${BASE_URL}/api/curso/${curso.ID_Curso}/quizzes`,
+          {
+            credentials: "include",
+          }
+        );
         if (!alive) return;
         if (r.ok) {
           const arr = await r.json();
@@ -40,7 +47,9 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
         setQuizzesCount(0);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [curso.ID_Curso]);
 
   // buscar avaliações
@@ -48,9 +57,12 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
     let alive = true;
     (async () => {
       try {
-        const res = await fetch(`${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliacoes`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${BASE_URL}/api/cursos/${curso.ID_Curso}/avaliacoes`,
+          {
+            credentials: "include",
+          }
+        );
         if (!alive) return;
         if (res.ok) {
           const data = await res.json();
@@ -62,7 +74,9 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
         setAvaliacoes([]);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [curso.ID_Curso]);
 
   // calcular média
@@ -81,7 +95,8 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
         body: JSON.stringify({ nota }),
       });
       if (!res.ok) {
-        if (res.status === 403) return alert("Tem de estar inscrito para avaliar.");
+        if (res.status === 403)
+          return alert("Tem de estar inscrito para avaliar.");
         if (res.status === 401) return alert("Sessão expirada. Inicie sessão.");
         return alert(`Erro ${res.status}: ${await res.text()}`);
       }
@@ -141,7 +156,10 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
   return (
     <div className="CursoCard-wrapper">
       <Card style={{ width: "18rem", overflow: "hidden" }}>
-        <div className="card-img-top" style={{ backgroundImage: `url(${image})` }} />
+        <div
+          className="card-img-top"
+          style={{ backgroundImage: `url(${image})` }}
+        />
         <Card.Body>
           <Card.Title>{curso.Nome_Curso}</Card.Title>
 
@@ -151,10 +169,36 @@ const CursoCard = ({ curso: initialCurso, hideRatings = false, hideButtons = fal
 
           {!hideRatings && (
             <Card.Text>
-              <strong>A minha classificação:</strong> {renderStars()}
-              
-              <div style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>
-                <strong>⭐</strong> {rating.toFixed(2)} ({numAval} classificações)
+              {/* Estrelas da tua avaliação */}
+              {renderStars()}
+
+              {/* Média do curso com fallback */}
+              <div
+                style={{
+                  fontSize: 12,
+                  opacity: 0.7,
+                  marginTop: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <FaStar color="#FFD700" size={14} />{" "}
+                {avaliacoes.length > 0
+                  ? (
+                      avaliacoes.reduce(
+                        (sum, a) => sum + Number(a.nota || 0),
+                        0
+                      ) / avaliacoes.length
+                    ).toFixed(2)
+                  : Number(curso.Rating ?? curso.rating ?? 0).toFixed(2)}{" "}
+                (
+                {avaliacoes.length > 0
+                  ? avaliacoes.length
+                  : Number(
+                      curso.Numero_Avaliacoes ?? curso.numeroAvaliacoes ?? 0
+                    )}{" "}
+                classificações)
               </div>
             </Card.Text>
           )}
